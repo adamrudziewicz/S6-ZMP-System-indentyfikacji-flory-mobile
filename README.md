@@ -1,17 +1,11 @@
-# system_identyfikacji_flory
+# Aplikacja mobilna projektu Systemu identyfikacji flory na przedmiot Zaawansowane Metody Programowania
 
-A new Flutter project.
 
-## Getting Started
+Repozytoria członków grupy:  
+[API: Java + SpringBoot + Maven + PostgreSQL, Maksym Wilk 43900](https://github.com/maksym456/S6-ZMP-System-indentyfikacji-flory-API)
 
-This project is a starting point for a Flutter application.
+[Aplikacja Mobilna: Dart + Flutter, Adam Rudziewicz 43882](https://github.com/adamrudziewicz/S6-ZMP-System-indentyfikacji-flory-mobile)
 
-A few resources to get you started if this is your first Flutter project:
+[Aplikacja Webowa: TypeScript + React, Szymon Rogula 43880](https://github.com/SX2V/S6-ZMP-System-indentyfikacji-flory-Web)
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Aplikacja Desktopowa: C# + .NET, Sebastian Waga 43894](https://github.com/sebastianwaga/S6-ZMP-System-indentyfikacji-flory-Desktop)
