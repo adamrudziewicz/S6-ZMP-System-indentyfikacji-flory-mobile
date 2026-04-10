@@ -1,0 +1,7 @@
+{
+    "@@locale": "pl",
+    "appTitle": "System Identyfikacji Flory",
+    "@appTitle": {
+        "description": "Tytuł aplikacji"
+    }
+}

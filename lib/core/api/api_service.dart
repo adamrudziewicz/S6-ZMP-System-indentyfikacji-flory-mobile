@@ -28,9 +28,8 @@ class ApiService {
           return handler.next(options);
         },
         onError: (DioException e, handler) {
-          // Tutaj możemy obsłużyć kody błędów np. 401 Unauthorized do wylogowania lub odświeżenia
           if (e.response?.statusCode == 401) {
-            // TODO: Logika wylogowania / odświeżenia tokena z AuthRepository
+            // TODO: Logika wylogowania / odświeżenia tokena
           }
           return handler.next(e);
         },
