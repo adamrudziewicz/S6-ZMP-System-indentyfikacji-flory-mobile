@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Aplikacja wymaga dostępu do Face ID w celu bezpiecznego logowania biometrycznego.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Aplikacja wymaga dostępu do aparatu fotograficznego w celu robienia zdjęć roślin do identyfikacji.</string>
 </dict>
 </plist>

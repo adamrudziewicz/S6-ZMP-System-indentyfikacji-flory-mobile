@@ -1,0 +1,12 @@
+import '../entities/friend.dart';
+import '../repositories/friend_repository.dart';
+
+class GetSentFriendRequestsUseCase {
+  final FriendRepository repository;
+
+  GetSentFriendRequestsUseCase(this.repository);
+
+  Future<List<Friend>> call() {
+    return repository.getSentFriendRequests();
+  }
+}

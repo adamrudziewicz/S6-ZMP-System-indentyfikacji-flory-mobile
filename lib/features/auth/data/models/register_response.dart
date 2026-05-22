@@ -6,6 +6,7 @@ part 'register_response.g.dart';
 @freezed
 abstract class RegisterResponse with _$RegisterResponse {
   const factory RegisterResponse({
+    String? message,
     required String id,
     required String username,
     required String email,

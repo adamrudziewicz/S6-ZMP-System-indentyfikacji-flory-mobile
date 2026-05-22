@@ -1,5 +1,6 @@
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BiometryService {
   final LocalAuthentication _auth = LocalAuthentication();
@@ -9,7 +10,7 @@ class BiometryService {
       final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;
       final bool canAuthenticate = await _auth.isDeviceSupported();
       return canAuthenticateWithBiometrics || canAuthenticate;
-    } on PlatformException catch (_) {
+    } catch (_) {
       return false;
     }
   }
@@ -20,8 +21,18 @@ class BiometryService {
         localizedReason: 'Zeskanuj odcisk palca lub twarz, aby odblokować aplikację',
       );
       return didAuthenticate;
-    } on PlatformException catch (_) {
+    } catch (e) {
       return false;
     }
+  }
+
+  Future<bool> isBiometryEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('biometry_enabled') ?? false;
+  }
+
+  Future<void> setBiometryEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('biometry_enabled', enabled);
   }
 }

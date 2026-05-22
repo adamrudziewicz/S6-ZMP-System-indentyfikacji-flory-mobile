@@ -1,30 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:system_identyfikacji_flory/main.dart';
+import 'package:system_identyfikacji_flory/features/plants/data/models/plant_response.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Plant Model Serialization Tests', () {
+    test('should correctly parse PlantResponse from JSON with new taxonomic fields', () {
+      final json = {
+        'id': 'a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1',
+        'herbariumId': 'b2b2b2b2-b2b2-b2b2-b2b2-b2b2b2b2b2b2',
+        'name': 'Róża',
+        'detectedSpecies': 'Rosa canina',
+        'speciesId': 'species_123',
+        'family': 'Rosaceae',
+        'genus': 'Rosa',
+        'commonNames': 'Szypszyna, Dzika róża',
+        'createdAt': '2026-05-20T20:00:00Z',
+        'updatedAt': '2026-05-20T20:00:00Z',
+        'photos': [
+          {
+            'id': 'p1p1p1p1-p1p1-p1p1-p1p1-p1p1p1p1p1p1',
+            'plantId': 'a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1',
+            'url': 'https://example.com/photo.jpg',
+            'description': 'Dzika róża z bliska',
+            'confidence': 0.95,
+            'createdAt': '2026-05-20T20:00:00Z'
+          }
+        ]
+      };
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      final response = PlantResponse.fromJson(json);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(response.id, 'a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1');
+      expect(response.name, 'Róża');
+      expect(response.detectedSpecies, 'Rosa canina');
+      expect(response.speciesId, 'species_123');
+      expect(response.family, 'Rosaceae');
+      expect(response.genus, 'Rosa');
+      expect(response.commonNames, 'Szypszyna, Dzika róża');
+      expect(response.photos.first.confidence, 0.95);
+    });
   });
 }

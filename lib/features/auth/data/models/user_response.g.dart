@@ -11,8 +11,10 @@ _UserResponse _$UserResponseFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       username: json['username'] as String,
       email: json['email'] as String,
-      role: json['role'] as String,
-      blocked: json['blocked'] as bool,
+      verified: json['verified'] as bool? ?? false,
+      active: json['active'] as bool? ?? false,
+      admin: json['admin'] as bool? ?? false,
+      warning: json['warning'] as String?,
     );
 
 Map<String, dynamic> _$UserResponseToJson(_UserResponse instance) =>
@@ -20,6 +22,8 @@ Map<String, dynamic> _$UserResponseToJson(_UserResponse instance) =>
       'id': instance.id,
       'username': instance.username,
       'email': instance.email,
-      'role': instance.role,
-      'blocked': instance.blocked,
+      'verified': instance.verified,
+      'active': instance.active,
+      'admin': instance.admin,
+      'warning': instance.warning,
     };

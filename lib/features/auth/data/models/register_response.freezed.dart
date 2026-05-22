@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterResponse {
 
- String get id; String get username; String get email;
+ String? get message; String get id; String get username; String get email;
 /// Create a copy of RegisterResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RegisterResponseCopyWith<RegisterResponse> get copyWith => _$RegisterResponseCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email);
+int get hashCode => Object.hash(runtimeType,message,id,username,email);
 
 @override
 String toString() {
-  return 'RegisterResponse(id: $id, username: $username, email: $email)';
+  return 'RegisterResponse(message: $message, id: $id, username: $username, email: $email)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RegisterResponseCopyWith<$Res>  {
   factory $RegisterResponseCopyWith(RegisterResponse value, $Res Function(RegisterResponse) _then) = _$RegisterResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String username, String email
+ String? message, String id, String username, String email
 });
 
 
@@ -65,9 +65,10 @@ class _$RegisterResponseCopyWithImpl<$Res>
 
 /// Create a copy of RegisterResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? message = freezed,Object? id = null,Object? username = null,Object? email = null,}) {
   return _then(_self.copyWith(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String username,  String email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? message,  String id,  String username,  String email)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterResponse() when $default != null:
-return $default(_that.id,_that.username,_that.email);case _:
+return $default(_that.message,_that.id,_that.username,_that.email);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.id,_that.username,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String username,  String email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? message,  String id,  String username,  String email)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterResponse():
-return $default(_that.id,_that.username,_that.email);case _:
+return $default(_that.message,_that.id,_that.username,_that.email);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.id,_that.username,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String username,  String email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? message,  String id,  String username,  String email)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterResponse() when $default != null:
-return $default(_that.id,_that.username,_that.email);case _:
+return $default(_that.message,_that.id,_that.username,_that.email);case _:
   return null;
 
 }
@@ -211,9 +212,10 @@ return $default(_that.id,_that.username,_that.email);case _:
 @JsonSerializable()
 
 class _RegisterResponse implements RegisterResponse {
-  const _RegisterResponse({required this.id, required this.username, required this.email});
+  const _RegisterResponse({this.message, required this.id, required this.username, required this.email});
   factory _RegisterResponse.fromJson(Map<String, dynamic> json) => _$RegisterResponseFromJson(json);
 
+@override final  String? message;
 @override final  String id;
 @override final  String username;
 @override final  String email;
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email);
+int get hashCode => Object.hash(runtimeType,message,id,username,email);
 
 @override
 String toString() {
-  return 'RegisterResponse(id: $id, username: $username, email: $email)';
+  return 'RegisterResponse(message: $message, id: $id, username: $username, email: $email)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$RegisterResponseCopyWith<$Res> implements $RegisterRespon
   factory _$RegisterResponseCopyWith(_RegisterResponse value, $Res Function(_RegisterResponse) _then) = __$RegisterResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String username, String email
+ String? message, String id, String username, String email
 });
 
 
@@ -268,9 +270,10 @@ class __$RegisterResponseCopyWithImpl<$Res>
 
 /// Create a copy of RegisterResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? message = freezed,Object? id = null,Object? username = null,Object? email = null,}) {
   return _then(_RegisterResponse(
-id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String?,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,

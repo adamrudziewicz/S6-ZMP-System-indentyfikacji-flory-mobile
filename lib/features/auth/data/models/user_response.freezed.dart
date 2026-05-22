@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserResponse {
 
- String get id; String get username; String get email; String get role; bool get blocked;
+ String get id; String get username; String get email; bool get verified; bool get active; bool get admin; String? get warning;
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserResponseCopyWith<UserResponse> get copyWith => _$UserResponseCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.blocked, blocked) || other.blocked == blocked));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.active, active) || other.active == active)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email,role,blocked);
+int get hashCode => Object.hash(runtimeType,id,username,email,verified,active,admin,warning);
 
 @override
 String toString() {
-  return 'UserResponse(id: $id, username: $username, email: $email, role: $role, blocked: $blocked)';
+  return 'UserResponse(id: $id, username: $username, email: $email, verified: $verified, active: $active, admin: $admin, warning: $warning)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserResponseCopyWith<$Res>  {
   factory $UserResponseCopyWith(UserResponse value, $Res Function(UserResponse) _then) = _$UserResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String username, String email, String role, bool blocked
+ String id, String username, String email, bool verified, bool active, bool admin, String? warning
 });
 
 
@@ -65,14 +65,16 @@ class _$UserResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? blocked = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? active = null,Object? admin = null,Object? warning = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,verified: null == verified ? _self.verified : verified // ignore: cast_nullable_to_non_nullable
+as bool,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,admin: null == admin ? _self.admin : admin // ignore: cast_nullable_to_non_nullable
+as bool,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  bool blocked)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String username,  String email,  bool verified,  bool active,  bool admin,  String? warning)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserResponse() when $default != null:
-return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);case _:
+return $default(_that.id,_that.username,_that.email,_that.verified,_that.active,_that.admin,_that.warning);case _:
   return orElse();
 
 }
@@ -178,10 +180,10 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String username,  String email,  String role,  bool blocked)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String username,  String email,  bool verified,  bool active,  bool admin,  String? warning)  $default,) {final _that = this;
 switch (_that) {
 case _UserResponse():
-return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);case _:
+return $default(_that.id,_that.username,_that.email,_that.verified,_that.active,_that.admin,_that.warning);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +200,10 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String username,  String email,  String role,  bool blocked)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String username,  String email,  bool verified,  bool active,  bool admin,  String? warning)?  $default,) {final _that = this;
 switch (_that) {
 case _UserResponse() when $default != null:
-return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);case _:
+return $default(_that.id,_that.username,_that.email,_that.verified,_that.active,_that.admin,_that.warning);case _:
   return null;
 
 }
@@ -213,14 +215,16 @@ return $default(_that.id,_that.username,_that.email,_that.role,_that.blocked);ca
 @JsonSerializable()
 
 class _UserResponse implements UserResponse {
-  const _UserResponse({required this.id, required this.username, required this.email, required this.role, required this.blocked});
+  const _UserResponse({required this.id, required this.username, required this.email, this.verified = false, this.active = false, this.admin = false, this.warning});
   factory _UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
 
 @override final  String id;
 @override final  String username;
 @override final  String email;
-@override final  String role;
-@override final  bool blocked;
+@override@JsonKey() final  bool verified;
+@override@JsonKey() final  bool active;
+@override@JsonKey() final  bool admin;
+@override final  String? warning;
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.role, role) || other.role == role)&&(identical(other.blocked, blocked) || other.blocked == blocked));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.active, active) || other.active == active)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.warning, warning) || other.warning == warning));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,email,role,blocked);
+int get hashCode => Object.hash(runtimeType,id,username,email,verified,active,admin,warning);
 
 @override
 String toString() {
-  return 'UserResponse(id: $id, username: $username, email: $email, role: $role, blocked: $blocked)';
+  return 'UserResponse(id: $id, username: $username, email: $email, verified: $verified, active: $active, admin: $admin, warning: $warning)';
 }
 
 
@@ -255,7 +259,7 @@ abstract mixin class _$UserResponseCopyWith<$Res> implements $UserResponseCopyWi
   factory _$UserResponseCopyWith(_UserResponse value, $Res Function(_UserResponse) _then) = __$UserResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String username, String email, String role, bool blocked
+ String id, String username, String email, bool verified, bool active, bool admin, String? warning
 });
 
 
@@ -272,14 +276,16 @@ class __$UserResponseCopyWithImpl<$Res>
 
 /// Create a copy of UserResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? email = null,Object? role = null,Object? blocked = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? active = null,Object? admin = null,Object? warning = freezed,}) {
   return _then(_UserResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,blocked: null == blocked ? _self.blocked : blocked // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,verified: null == verified ? _self.verified : verified // ignore: cast_nullable_to_non_nullable
+as bool,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
+as bool,admin: null == admin ? _self.admin : admin // ignore: cast_nullable_to_non_nullable
+as bool,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

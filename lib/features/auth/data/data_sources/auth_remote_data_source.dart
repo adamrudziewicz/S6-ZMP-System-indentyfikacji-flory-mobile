@@ -3,6 +3,7 @@ import '../models/login_request.dart';
 import '../models/login_response.dart';
 import '../models/register_request.dart';
 import '../models/register_response.dart';
+import '../models/user_response.dart';
 
 class AuthRemoteDataSource {
   final Dio _dio;
@@ -25,14 +26,19 @@ class AuthRemoteDataSource {
     return RegisterResponse.fromJson(response.data);
   }
 
-  Future<void> logout() async {
-    await _dio.post('/users/logout');
-  }
-
   Future<void> forgotPassword(String email) async {
     await _dio.post(
-      '/users/password/forgot',
+      '/users/forgot-password',
       data: {'email': email},
     );
+  }
+
+  Future<UserResponse> me() async {
+    final response = await _dio.get('/users/me');
+    return UserResponse.fromJson(response.data);
+  }
+
+  Future<void> deleteMyAccount() async {
+    await _dio.delete('/users/me');
   }
 }

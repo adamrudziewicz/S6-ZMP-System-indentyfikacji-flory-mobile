@@ -6,4 +6,6 @@ abstract class AuthRepository {
   Future<void> logout();
   Future<void> forgotPassword(String email);
   Future<String?> getToken();
+  Future<User> me();
+  Future<void> deleteMyAccount();
 }

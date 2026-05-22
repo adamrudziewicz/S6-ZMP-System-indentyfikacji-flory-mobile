@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:developer' as developer;
 import '../storage/storage_service.dart';
 import 'api_constants.dart';
 
@@ -18,18 +19,39 @@ class ApiService {
   Dio get client => _dio;
 
   void _initializeInterceptors() {
+    _dio.interceptors.add(LogInterceptor(
+      requestHeader: true,
+      requestBody: false,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      logPrint: (object) => developer.log(object.toString(), name: 'HTTP'),
+    ));
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await _storageService.getToken();
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
+          if (token != null && token.isNotEmpty) {
+            final cleanToken = token.replaceAll(RegExp(r'Bearer\s+', caseSensitive: false), '').trim();
+            options.headers['Authorization'] = 'Bearer $cleanToken';
           }
           return handler.next(options);
         },
-        onError: (DioException e, handler) {
-          if (e.response?.statusCode == 401) {
-            // TODO: Logika wylogowania / odświeżenia tokena
+        onError: (DioException e, handler) async {
+          final statusCode = e.response?.statusCode;
+          final path = e.requestOptions.path;
+          
+          developer.log(
+            'API ERROR: $statusCode on $path — body: ${e.response?.data}',
+            name: 'ApiService',
+          );
+
+          if (statusCode == 401) {
+            final isAuthEndpoint = path.contains('/users/');
+            if (isAuthEndpoint) {
+              await _storageService.deleteToken();
+            }
           }
           return handler.next(e);
         },

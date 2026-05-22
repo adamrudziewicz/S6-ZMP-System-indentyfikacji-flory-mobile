@@ -22,7 +22,9 @@ class AuthRepositoryImpl implements AuthRepository {
       id: response.id,
       username: response.username,
       email: response.email,
-      role: response.roles.isNotEmpty ? response.roles.first : 'USER',
+      verified: response.verified,
+      active: true,
+      admin: response.admin,
     );
   }
 
@@ -35,12 +37,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    try {
-      await _remoteDataSource.logout();
-    } catch (_) {
-    } finally {
-      await _storageService.deleteToken();
-    }
+    await _storageService.deleteToken();
   }
 
   @override
@@ -51,5 +48,24 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<String?> getToken() async {
     return await _storageService.getToken();
+  }
+
+  @override
+  Future<User> me() async {
+    final response = await _remoteDataSource.me();
+    return User(
+      id: response.id,
+      username: response.username,
+      email: response.email,
+      verified: response.verified,
+      active: response.active,
+      admin: response.admin,
+    );
+  }
+
+  @override
+  Future<void> deleteMyAccount() async {
+    await _remoteDataSource.deleteMyAccount();
+    await _storageService.deleteToken();
   }
 }

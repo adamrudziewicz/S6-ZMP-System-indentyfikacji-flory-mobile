@@ -9,8 +9,10 @@ abstract class UserResponse with _$UserResponse {
     required String id,
     required String username,
     required String email,
-    required String role,
-    required bool blocked,
+    @Default(false) bool verified,
+    @Default(false) bool active,
+    @Default(false) bool admin,
+    String? warning,
   }) = _UserResponse;
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);

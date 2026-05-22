@@ -12,11 +12,12 @@ class AuthStarted extends AuthEvent {}
 class AuthLoginRequested extends AuthEvent {
   final String login;
   final String password;
+  final bool rememberMe;
 
-  const AuthLoginRequested(this.login, this.password);
+  const AuthLoginRequested(this.login, this.password, {this.rememberMe = false});
 
   @override
-  List<Object> get props => [login, password];
+  List<Object> get props => [login, password, rememberMe];
 }
 
 class AuthRegisterRequested extends AuthEvent {
@@ -31,3 +32,12 @@ class AuthRegisterRequested extends AuthEvent {
 }
 
 class AuthLogoutRequested extends AuthEvent {}
+
+class AuthForgotPasswordRequested extends AuthEvent {
+  final String email;
+
+  const AuthForgotPasswordRequested(this.email);
+
+  @override
+  List<Object> get props => [email];
+}

@@ -1,5 +1,5 @@
-# OpenAPI spec
-flora-explorer-openapi-v2.yaml
+﻿# OpenAPI spec
+api-docs.json
 
 # Miscellaneous
 *.class
@@ -46,3 +46,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment Variables
+.env
+

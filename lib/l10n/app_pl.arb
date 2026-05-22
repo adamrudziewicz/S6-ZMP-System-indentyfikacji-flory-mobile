@@ -1,7 +1,167 @@
 {
     "@@locale": "pl",
     "appTitle": "System Identyfikacji Flory",
-    "@appTitle": {
-        "description": "Tytuł aplikacji"
-    }
+    "profileTitle": "Mój Profil",
+    "settingsTitle": "Ustawienia",
+    "appLanguage": "Język aplikacji",
+    "polish": "Polski",
+    "english": "Angielski",
+    "security": "Bezpieczeństwo",
+    "biometricLoginEnabled": "Logowanie biometryczne włączone",
+    "logout": "Wyloguj się",
+    "logoutConfirmationTitle": "Wylogowanie",
+    "logoutConfirmationContent": "Czy na pewno chcesz się wylogować ze swojego konta?",
+    "cancel": "Anuluj",
+    "navHerbaria": "Zielniki",
+    "navNotifications": "Powiadomienia",
+    "navProfile": "Profil",
+    "loginSubtitle": "Odkrywaj naturę ze swoim zielnikiem",
+    "usernameLabel": "Nazwa użytkownika",
+    "passwordLabel": "Hasło",
+    "forgotPasswordButton": "Zapomniałeś hasła?",
+    "loginButton": "Zaloguj się",
+    "noAccountText": "Nie masz konta? ",
+    "registerButton": "Zarejestruj się",
+    "resetPasswordTitle": "Zresetuj hasło",
+    "resetPasswordMessage": "Podaj adres e-mail, na który wyślemy instrukcję resetowania hasła.",
+    "emailLabel": "Adres e-mail",
+    "sendLinkButton": "Wyślij link",
+    "registerTitle": "Dołącz do nas",
+    "registerSubtitle": "Załóż darmowe konto, aby zapisać swoje odkrycia",
+    "createAccountButton": "Utwórz konto",
+    "myHerbariaTitle": "Moje Zielniki",
+    "emptyHerbariaTitle": "Twój zbiór jest pusty",
+    "emptyHerbariaSubtitle": "Rozpocznij przygodę dodając pierwszy zielnik.",
+    "offlineSyncTooltip": "Oczekuje na synchronizację (Offline)",
+    "noDescription": "Brak opisu",
+    "newHerbariumTitle": "Nowy Zielnik",
+    "nameLabel": "Nazwa",
+    "descriptionOptionalLabel": "Opis (opcjonalnie)",
+    "publicLabel": "Publiczny",
+    "publicDescription": "Wszyscy będą mogli zobaczyć ten zielnik.",
+    "createButton": "Utwórz",
+    "emptyPlantsTitle": "Brak roślin w tym zielniku",
+    "emptyPlantsSubtitle": "Kliknij \"Zidentyfikuj\", aby dodać pierwszy okaz.",
+    "unknownSpecies": "Nieznany gatunek",
+    "confidenceLabel": "Pewność: ",
+    "identifyButton": "Zidentyfikuj",
+    "scannerTitle": "Skaner Roślin",
+    "cameraInit": "Inicjalizacja kamery...",
+    "cameraError": "Błąd kamery: ",
+    "processingPhoto": "Przetwarzanie zdjęcia...",
+    "placePlantInFrame": "Umieść roślinę wewnątrz ramki",
+    "plantSavedSuccess": "Roślina pomyślnie zapisana!",
+    "identificationError": "Błąd identyfikacji: ",
+    "plantDetailsTitle": "Szczegóły znaleziska",
+    "plantDetailsSubtitle": "Sztuczna inteligencja przeanalizuje Twoje zdjęcie i spróbuje rozpoznać gatunek.",
+    "notesOptionalLabel": "Notatki (opcjonalnie)",
+    "plantRecognized": "Rozpoznano roślinę!",
+    "plantNotRecognized": "Nie udało się rozpoznać gatunku",
+    "identifyWithAiButton": "Zidentyfikuj z AI",
+    "aiAnalyzing": "Sztuczna inteligencja analizuje obraz...",
+    "markAsReadButton": "Odczytaj",
+    "noNewMessagesTitle": "Brak nowych wiadomości",
+    "noNewMessagesSubtitle": "Tutaj pojawią się informacje o Twoich roślinach.",
+    "loginErrorMessage": "Wystąpił błąd podczas logowania.",
+    "loginInvalidCredentialsError": "Nieprawidłowy login lub hasło.",
+    "emailNotVerifiedError": "Zweryfikuj swój adres e-mail przed logowaniem.",
+    "loginInvalidRequestError": "Nieprawidłowe zapytanie logowania.",
+    "registerSuccessMessage": "Zarejestrowano pomyślnie! Możesz się zalogować.",
+    "registerErrorMessage": "Błąd rejestracji. Sprawdź dane.",
+    "registerConflictError": "Nazwa użytkownika lub email są już zajęte.",
+    "registerInvalidRequestError": "Błędne dane. Sprawdź poprawność wprowadzonych informacji.",
+    "forgotPasswordSuccessMessage": "Instrukcje resetowania hasła zostały wysłane.",
+    "forgotPasswordErrorMessage": "Nie udało się wysłać linku. Sprawdź adres e-mail.",
+    "pwdMinLength": "Minimum 8 znaków",
+    "pwdUppercase": "Wielka litera",
+    "pwdLowercase": "Mała litera",
+    "pwdNumber": "Cyfra",
+    "pwdSpecial": "Znak specjalny",
+    "herbariaLoadError": "Błąd ładowania zielników.",
+    "plantsLoadError": "Błąd ładowania roślin.",
+    "chooseLanguageTitle": "Wybierz język",
+    "currentLanguage": "Polski",
+    "editNameTitle": "Edytuj nazwę",
+    "plantNameLabel": "Nazwa rośliny",
+    "saveButton": "Zapisz",
+    "cancelButton": "Anuluj",
+    "familyLabel": "Rodzina",
+    "genusLabel": "Rodzaj",
+    "commonNamesLabel": "Nazwy zwyczajowe",
+    "createdAtLabel": "Dodano",
+    "descriptionLabel": "Opis",
+    "unnamedPlant": "Nienazwana roślina",
+    "plantDetailsHeader": "Szczegóły rośliny",
+    "navFriends": "Znajomi",
+    "friendsTitle": "Znajomi",
+    "friendsTabList": "Moi znajomi",
+    "friendsTabRequests": "Zaproszenia",
+    "addFriendTitle": "Dodaj znajomego",
+    "addFriendLabel": "Nazwa użytkownika",
+    "sendRequestButton": "Wyślij",
+    "acceptRequestButton": "Akceptuj",
+    "declineRequestButton": "Odrzuć",
+    "removeFriendButton": "Usuń",
+    "noFriendsText": "Nie masz jeszcze żadnych znajomych.",
+    "noRequestsText": "Brak oczekujących zaproszeń.",
+    "sentRequestsHeader": "Wysłane zaproszenia",
+    "incomingRequestsHeader": "Otrzymane zaproszenia",
+    "changeVisibility": "Zmień widoczność",
+    "makePublicConfirm": "Czy chcesz uczynić ten zielnik publicznym?",
+    "makePrivateConfirm": "Czy chcesz uczynić ten zielnik prywatnym?",
+    "confirm": "Potwierdź",
+    "editDescriptionTitle": "Edytuj opis",
+    "addDescriptionLabel": "Dodaj opis...",
+    
+    "deleteHerbarium": "Usuń zielnik",
+    "deleteHerbariumTitle": "Usuń zielnik",
+    "deleteHerbariumContent": "Czy na pewno chcesz usunąć zielnik \"{name}\"? Tej operacji nie można cofnąć.",
+    "@deleteHerbariumContent": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "deletePlant": "Usuń roślinę",
+    "deletePlantTitle": "Usuń roślinę",
+    "deletePlantContent": "Czy na pewno chcesz usunąć roślinę \"{name}\"? Tej operacji nie można cofnąć.",
+    "@deletePlantContent": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "cancelAction": "Anuluj",
+    "deleteAction": "Usuń",
+    
+    "chooseAction": "Wybierz działanie:",
+    "addNewPlant": "Dodaj jako nową roślinę: {name}",
+    "@addNewPlant": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    "unknownPlant": "Nieznany",
+    "addToExisting": "Dodaj do istniejącej rośliny o tej nazwie:",
+    "unnamedPlant": "Nienazwana roślina",
+    "photoCount": "Liczba zdjęć w bazie: {count}",
+    "@photoCount": {
+      "placeholders": {
+        "count": {
+          "type": "int"
+        }
+      }
+    },
+    "aiSuggestion": "Propozycja sztucznej inteligencji:",
+    
+    "secureScreenTitle": "Ochrona przed podglądem",
+    "secureScreenSubtitle": "Zablokuj zrzuty ekranu i podgląd aplikacji",
+    "biometryTitle": "Logowanie biometrią",
+    "biometryEnabled": "Włączone",
+    "biometryDisabled": "Wyłączone",
+    "biometryNotSupported": "Twoje urządzenie nie obsługuje biometrii."
 }
