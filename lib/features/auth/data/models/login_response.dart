@@ -14,6 +14,7 @@ abstract class LoginResponse with _$LoginResponse {
     @Default(false) bool verified,
     @Default(false) bool admin,
     required String token,
+    required String refreshToken,
   }) = _LoginResponse;
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);

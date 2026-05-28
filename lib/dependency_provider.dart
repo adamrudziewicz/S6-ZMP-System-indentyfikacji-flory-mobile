@@ -7,6 +7,7 @@ import 'core/storage/storage_service.dart';
 import 'core/network/network_info.dart';
 import 'core/biometry/biometry_service.dart';
 import 'core/security/security_service.dart';
+import 'core/notifications/push_notification_service.dart';
 
 import 'features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -16,6 +17,7 @@ import 'features/auth/domain/use_cases/register_use_case.dart';
 import 'features/auth/domain/use_cases/logout_use_case.dart';
 import 'features/auth/domain/use_cases/forgot_password_use_case.dart';
 import 'features/auth/domain/use_cases/get_me_use_case.dart';
+import 'features/auth/domain/use_cases/resend_verification_email_use_case.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 import 'features/herbaria/data/data_sources/herbarium_local_data_source.dart';
@@ -29,6 +31,7 @@ import 'features/herbaria/domain/use_cases/delete_herbarium_use_case.dart';
 import 'features/herbaria/presentation/bloc/herbaria_bloc.dart';
 
 import 'features/plants/data/data_sources/plant_remote_data_source.dart';
+import 'features/plants/data/data_sources/plant_local_data_source.dart';
 import 'features/plants/data/repositories/plant_repository_impl.dart';
 import 'features/plants/domain/repositories/plant_repository.dart';
 import 'features/plants/domain/use_cases/add_plant_use_case.dart';
@@ -59,33 +62,65 @@ import 'features/friends/domain/use_cases/get_sent_friend_requests_use_case.dart
 import 'features/friends/domain/use_cases/delete_friendship_use_case.dart';
 import 'features/friends/presentation/bloc/friends_bloc.dart';
 
-class DependencyProvider extends StatelessWidget {
+class DependencyProvider extends StatefulWidget {
   final Widget child;
 
   const DependencyProvider({Key? key, required this.child}) : super(key: key);
 
   @override
+  State<DependencyProvider> createState() => _DependencyProviderState();
+}
+
+class _DependencyProviderState extends State<DependencyProvider> {
+  late final StorageService storageService;
+  late final ApiService apiService;
+  late final NetworkInfoImpl networkInfo;
+  late final SecurityService securityService;
+  late final BiometryService biometryService;
+  late final PushNotificationService pushNotificationService;
+
+  late final AuthRemoteDataSource authRemoteDataSource;
+  late final HerbariumRemoteDataSourceImpl herbariumRemoteDataSource;
+  late final HerbariumLocalDataSourceImpl herbariumLocalDataSource;
+  late final PlantRemoteDataSourceImpl plantRemoteDataSource;
+  late final PlantLocalDataSourceImpl plantLocalDataSource;
+  late final NotificationRemoteDataSourceImpl notificationRemoteDataSource;
+  late final FriendRemoteDataSourceImpl friendRemoteDataSource;
+
+  @override
+  void initState() {
+    super.initState();
+    storageService = StorageService();
+    apiService = ApiService(storageService);
+    networkInfo = NetworkInfoImpl(Connectivity());
+    securityService = SecurityService();
+    biometryService = BiometryService();
+    pushNotificationService = PushNotificationService();
+
+    authRemoteDataSource = AuthRemoteDataSource(apiService.client);
+    herbariumRemoteDataSource = HerbariumRemoteDataSourceImpl(apiService);
+    herbariumLocalDataSource = HerbariumLocalDataSourceImpl();
+    plantRemoteDataSource = PlantRemoteDataSourceImpl(apiService);
+    plantLocalDataSource = PlantLocalDataSourceImpl();
+    notificationRemoteDataSource = NotificationRemoteDataSourceImpl(apiService);
+    friendRemoteDataSource = FriendRemoteDataSourceImpl(apiService);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final storageService = StorageService();
-    final apiService = ApiService(storageService);
-    final networkInfo = NetworkInfoImpl(Connectivity());
-    final securityService = SecurityService();
-    final biometryService = BiometryService();
-
-    final authRemoteDataSource = AuthRemoteDataSource(apiService.client);
-    final herbariumRemoteDataSource = HerbariumRemoteDataSourceImpl(apiService);
-    final herbariumLocalDataSource = HerbariumLocalDataSourceImpl();
-    final plantRemoteDataSource = PlantRemoteDataSourceImpl(apiService);
-    final notificationRemoteDataSource = NotificationRemoteDataSourceImpl(apiService);
-    final friendRemoteDataSource = FriendRemoteDataSourceImpl(apiService);
-
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<StorageService>(
+          create: (context) => storageService,
+        ),
         RepositoryProvider<SecurityService>(
           create: (context) => securityService,
         ),
         RepositoryProvider<BiometryService>(
           create: (context) => biometryService,
+        ),
+        RepositoryProvider<PushNotificationService>(
+          create: (context) => pushNotificationService,
         ),
         RepositoryProvider<AuthRepository>(
           create: (context) => AuthRepositoryImpl(authRemoteDataSource, storageService),
@@ -98,7 +133,7 @@ class DependencyProvider extends StatelessWidget {
           ),
         ),
         RepositoryProvider<PlantRepository>(
-          create: (context) => PlantRepositoryImpl(plantRemoteDataSource),
+          create: (context) => PlantRepositoryImpl(plantRemoteDataSource, plantLocalDataSource, networkInfo),
         ),
         RepositoryProvider<NotificationRepository>(
           create: (context) => NotificationRepositoryImpl(notificationRemoteDataSource),
@@ -113,11 +148,14 @@ class DependencyProvider extends StatelessWidget {
             create: (context) => AuthBloc(
               storageService: storageService,
               biometryService: biometryService,
+              pushNotificationService: pushNotificationService,
+              authRepository: context.read<AuthRepository>(),
               loginUseCase: LoginUseCase(context.read<AuthRepository>()),
               registerUseCase: RegisterUseCase(context.read<AuthRepository>()),
               logoutUseCase: LogoutUseCase(context.read<AuthRepository>()),
               forgotPasswordUseCase: ForgotPasswordUseCase(context.read<AuthRepository>()),
               getMeUseCase: GetMeUseCase(context.read<AuthRepository>()),
+              resendVerificationEmailUseCase: ResendVerificationEmailUseCase(context.read<AuthRepository>()),
             ),
           ),
           BlocProvider<HerbariaBloc>(
@@ -144,6 +182,7 @@ class DependencyProvider extends StatelessWidget {
           ),
           BlocProvider<NotificationBloc>(
             create: (context) => NotificationBloc(
+              pushNotificationService: pushNotificationService,
               getNotifications: GetNotificationsUseCase(context.read<NotificationRepository>()),
               getUnreadNotifications: GetUnreadNotificationsUseCase(context.read<NotificationRepository>()),
               markAsRead: MarkNotificationAsReadUseCase(context.read<NotificationRepository>()),
@@ -161,7 +200,7 @@ class DependencyProvider extends StatelessWidget {
             ),
           ),
         ],
-        child: child,
+        child: widget.child,
       ),
     );
   }

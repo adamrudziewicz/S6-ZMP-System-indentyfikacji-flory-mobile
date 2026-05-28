@@ -25,6 +25,7 @@
     "loginButton": "Log in",
     "noAccountText": "Don't have an account? ",
     "registerButton": "Sign up",
+    "rememberMe": "Remember me",
     "resetPasswordTitle": "Reset password",
     "resetPasswordMessage": "Enter your email address and we'll send you instructions to reset your password.",
     "emailLabel": "Email address",
@@ -166,5 +167,19 @@
     "biometryTitle": "Biometric login",
     "biometryEnabled": "Enabled",
     "biometryDisabled": "Disabled",
-    "biometryNotSupported": "Your device does not support biometrics."
+    "biometryNotSupported": "Your device does not support biometrics.",
+    
+    "removeFriendTitle": "Remove friend",
+    "removeFriendContent": "Are you sure you want to remove \"{name}\" from your friends?",
+    "@removeFriendContent": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    
+    "resendVerificationButton": "Resend",
+    "resendVerificationSuccessMessage": "Verification link has been resent.",
+    "resendVerificationErrorMessage": "Failed to resend verification link."
 }

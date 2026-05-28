@@ -1,6 +1,6 @@
 ﻿# OpenAPI spec
 api-docs.json
-
+api-docs (1).json
 # Miscellaneous
 *.class
 *.log
@@ -46,6 +46,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase
+google-services.json
 
 # Environment Variables
 .env

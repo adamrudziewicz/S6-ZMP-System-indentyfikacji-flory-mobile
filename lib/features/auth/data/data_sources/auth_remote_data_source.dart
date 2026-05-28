@@ -41,4 +41,43 @@ class AuthRemoteDataSource {
   Future<void> deleteMyAccount() async {
     await _dio.delete('/users/me');
   }
+
+  Future<void> resendVerificationEmail(String email) async {
+    await _dio.post(
+      '/users/resend-verification',
+      queryParameters: {'email': email},
+    );
+  }
+
+  Future<void> logout(String refreshToken) async {
+    await _dio.post(
+      '/users/logout',
+      data: {'refreshToken': refreshToken},
+    );
+  }
+
+  Future<Map<String, String>> refresh(String refreshToken) async {
+    final response = await _dio.post(
+      '/users/refresh',
+      data: {'refreshToken': refreshToken},
+    );
+    return {
+      'token': response.data['token'] as String,
+      'refreshToken': response.data['refreshToken'] as String,
+    };
+  }
+
+  Future<void> registerFcmToken(String fcmToken) async {
+    await _dio.post(
+      '/users/me/fcm-token',
+      data: {'token': fcmToken},
+    );
+  }
+
+  Future<void> unregisterFcmToken(String fcmToken) async {
+    await _dio.delete(
+      '/users/me/fcm-token',
+      queryParameters: {'token': fcmToken},
+    );
+  }
 }

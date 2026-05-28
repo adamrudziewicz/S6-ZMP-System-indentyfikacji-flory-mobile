@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,6 +20,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   await Hive.initFlutter();
+  
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    debugPrint('Firebase init failed (ensure google-services.json is present): $e');
+  }
+  
   runApp(const MyApp());
 }
 
@@ -90,10 +98,16 @@ class _AuthWrapperState extends State<AuthWrapper> {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (previous, current) => previous is AuthAuthenticated && current is AuthUnauthenticated,
       listener: (context, state) {
+        ScaffoldMessenger.of(context).clearSnackBars();
         Navigator.of(context).popUntil((route) => route.isFirst);
       },
-      child: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
+      child: BlocListener<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => current is AuthAuthenticated,
+        listener: (context, state) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+        },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
           if (state is AuthInitial) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
@@ -104,6 +118,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
             return const LoginPage();
           }
         },
+      ),
       ),
     );
   }

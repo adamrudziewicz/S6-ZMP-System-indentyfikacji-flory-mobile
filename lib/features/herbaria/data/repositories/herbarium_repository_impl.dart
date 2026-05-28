@@ -53,7 +53,7 @@ class HerbariumRepositoryImpl implements HerbariumRepository {
 
     if (isConnected) {
       try {
-        await _syncQueue(); // Synchronizujemy zaległe dane po odzyskaniu neta
+        await _syncQueue();
         final response = await _remoteDataSource.getMyHerbaria();
         await _localDataSource.cacheHerbaria(response);
         return response.map(_mapDtoToEntity).toList();

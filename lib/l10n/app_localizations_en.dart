@@ -76,6 +76,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registerButton => 'Sign up';
 
   @override
+  String get rememberMe => 'Remember me';
+
+  @override
   String get resetPasswordTitle => 'Reset password';
 
   @override
@@ -427,4 +430,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get biometryNotSupported => 'Your device does not support biometrics.';
+
+  @override
+  String get removeFriendTitle => 'Remove friend';
+
+  @override
+  String removeFriendContent(String name) {
+    return 'Are you sure you want to remove \"$name\" from your friends?';
+  }
+
+  @override
+  String get resendVerificationButton => 'Resend';
+
+  @override
+  String get resendVerificationSuccessMessage =>
+      'Verification link has been resent.';
+
+  @override
+  String get resendVerificationErrorMessage =>
+      'Failed to resend verification link.';
 }

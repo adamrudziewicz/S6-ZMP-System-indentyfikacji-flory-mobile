@@ -95,7 +95,7 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
               ],
             );
           }
-          return Center(child: Text(l10n.herbariaLoadError)); // Fallback text, ideally generic error
+          return Center(child: Text(l10n.herbariaLoadError));
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -129,7 +129,7 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
           actionIcon: Icons.person_remove_rounded,
           actionColor: Colors.red.shade400,
           onActionPressed: () {
-            context.read<FriendsBloc>().add(RemoveFriendship(friend.friendshipId));
+            _showRemoveFriendConfirmation(context, l10n, friend.friendshipId, displayUsername);
           },
         );
       },
@@ -339,6 +339,37 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
                 }
               },
               child: Text(l10n.sendRequestButton),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showRemoveFriendConfirmation(BuildContext context, AppLocalizations l10n, String friendshipId, String username) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(l10n.removeFriendTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
+          content: Text(l10n.removeFriendContent(username)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red.shade600,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () {
+                this.context.read<FriendsBloc>().add(RemoveFriendship(friendshipId));
+                Navigator.pop(ctx);
+              },
+              child: Text(l10n.removeFriendButton),
             ),
           ],
         );

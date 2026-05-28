@@ -8,6 +8,9 @@ import '../../domain/use_cases/register_use_case.dart';
 import '../../domain/use_cases/logout_use_case.dart';
 import '../../domain/use_cases/forgot_password_use_case.dart';
 import '../../domain/use_cases/get_me_use_case.dart';
+import '../../domain/use_cases/resend_verification_email_use_case.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../../../core/notifications/push_notification_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -19,8 +22,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LogoutUseCase _logoutUseCase;
   final ForgotPasswordUseCase _forgotPasswordUseCase;
   final GetMeUseCase _getMeUseCase;
+  final ResendVerificationEmailUseCase _resendVerificationEmailUseCase;
+  final PushNotificationService _pushNotificationService;
+  final AuthRepository _authRepository;
 
   StreamSubscription<bool>? _authStateSubscription;
+  StreamSubscription<String>? _fcmTokenSubscription;
 
   AuthBloc({
     required StorageService storageService,
@@ -30,6 +37,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required LogoutUseCase logoutUseCase,
     required ForgotPasswordUseCase forgotPasswordUseCase,
     required GetMeUseCase getMeUseCase,
+    required ResendVerificationEmailUseCase resendVerificationEmailUseCase,
+    required PushNotificationService pushNotificationService,
+    required AuthRepository authRepository,
   })  : _storageService = storageService,
         _biometryService = biometryService,
         _loginUseCase = loginUseCase,
@@ -37,12 +47,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _logoutUseCase = logoutUseCase,
         _forgotPasswordUseCase = forgotPasswordUseCase,
         _getMeUseCase = getMeUseCase,
+        _resendVerificationEmailUseCase = resendVerificationEmailUseCase,
+        _pushNotificationService = pushNotificationService,
+        _authRepository = authRepository,
         super(AuthInitial()) {
     on<AuthStarted>(_onAuthStarted);
     on<AuthLoginRequested>(_onAuthLoginRequested);
     on<AuthRegisterRequested>(_onAuthRegisterRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
     on<AuthForgotPasswordRequested>(_onAuthForgotPasswordRequested);
+    on<AuthResendVerificationEmailRequested>(_onAuthResendVerificationEmailRequested);
 
     _authStateSubscription = _storageService.authStateStream.listen((hasToken) {
       if (!hasToken && state is AuthAuthenticated) {
@@ -54,7 +68,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   @override
   Future<void> close() {
     _authStateSubscription?.cancel();
+    _fcmTokenSubscription?.cancel();
     return super.close();
+  }
+
+  Future<void> _initPushNotifications() async {
+    await _pushNotificationService.init();
+    final token = await _pushNotificationService.getToken();
+    if (token != null) {
+      try {
+        await _authRepository.registerFcmToken(token);
+      } catch (_) {}
+    }
+
+    _fcmTokenSubscription?.cancel();
+    _fcmTokenSubscription = _pushNotificationService.onTokenRefresh.listen((newToken) async {
+      try {
+        await _authRepository.registerFcmToken(newToken);
+      } catch (_) {}
+    });
   }
 
   Future<void> _onAuthStarted(AuthStarted event, Emitter<AuthState> emit) async {
@@ -81,8 +113,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (authenticated) {
         try {
           final user = await _getMeUseCase();
+          await _initPushNotifications();
           emit(AuthAuthenticated(user: user));
         } catch (_) {
+          await _initPushNotifications();
           emit(const AuthAuthenticated());
         }
       } else {
@@ -92,8 +126,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       try {
         final user = await _getMeUseCase();
+        await _initPushNotifications();
         emit(AuthAuthenticated(user: user));
       } catch (_) {
+        await _initPushNotifications();
         emit(const AuthAuthenticated());
       }
     }
@@ -120,6 +156,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await _storageService.deleteSavedCredentials();
       }
       
+      await _initPushNotifications();
       emit(AuthAuthenticated(user: user));
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
@@ -155,6 +192,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onAuthLogoutRequested(AuthLogoutRequested event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
+    
+    _fcmTokenSubscription?.cancel();
+    final fcmToken = await _pushNotificationService.getToken();
+    if (fcmToken != null) {
+      try {
+        await _authRepository.unregisterFcmToken(fcmToken);
+      } catch (_) {}
+    }
+
     await _logoutUseCase();
     emit(AuthUnauthenticated());
   }
@@ -167,6 +213,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthUnauthenticated());
     } catch (e) {
       emit(const AuthError('forgot_password_error'));
+    }
+  }
+
+  Future<void> _onAuthResendVerificationEmailRequested(AuthResendVerificationEmailRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _resendVerificationEmailUseCase(event.email);
+      emit(const AuthActionSuccess('resend_verification_success'));
+      emit(AuthUnauthenticated());
+    } catch (e) {
+      emit(const AuthError('resend_verification_error'));
+      emit(AuthUnauthenticated());
     }
   }
 }

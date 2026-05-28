@@ -16,6 +16,7 @@ _LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) =>
       verified: json['verified'] as bool? ?? false,
       admin: json['admin'] as bool? ?? false,
       token: json['token'] as String,
+      refreshToken: json['refreshToken'] as String,
     );
 
 Map<String, dynamic> _$LoginResponseToJson(_LoginResponse instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$LoginResponseToJson(_LoginResponse instance) =>
       'verified': instance.verified,
       'admin': instance.admin,
       'token': instance.token,
+      'refreshToken': instance.refreshToken,
     };

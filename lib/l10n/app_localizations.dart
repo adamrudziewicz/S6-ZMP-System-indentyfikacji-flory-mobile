@@ -230,6 +230,12 @@ abstract class AppLocalizations {
   /// **'Sign up'**
   String get registerButton;
 
+  /// No description provided for @rememberMe.
+  ///
+  /// In en, this message translates to:
+  /// **'Remember me'**
+  String get rememberMe;
+
   /// No description provided for @resetPasswordTitle.
   ///
   /// In en, this message translates to:
@@ -889,6 +895,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your device does not support biometrics.'**
   String get biometryNotSupported;
+
+  /// No description provided for @removeFriendTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove friend'**
+  String get removeFriendTitle;
+
+  /// No description provided for @removeFriendContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove \"{name}\" from your friends?'**
+  String removeFriendContent(String name);
+
+  /// No description provided for @resendVerificationButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend'**
+  String get resendVerificationButton;
+
+  /// No description provided for @resendVerificationSuccessMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification link has been resent.'**
+  String get resendVerificationSuccessMessage;
+
+  /// No description provided for @resendVerificationErrorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resend verification link.'**
+  String get resendVerificationErrorMessage;
 }
 
 class _AppLocalizationsDelegate

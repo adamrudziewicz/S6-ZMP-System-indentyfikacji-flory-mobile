@@ -22,6 +22,7 @@
     "loginButton": "Zaloguj się",
     "noAccountText": "Nie masz konta? ",
     "registerButton": "Zarejestruj się",
+    "rememberMe": "Zapamiętaj mnie",
     "resetPasswordTitle": "Zresetuj hasło",
     "resetPasswordMessage": "Podaj adres e-mail, na który wyślemy instrukcję resetowania hasła.",
     "emailLabel": "Adres e-mail",
@@ -163,5 +164,19 @@
     "biometryTitle": "Logowanie biometrią",
     "biometryEnabled": "Włączone",
     "biometryDisabled": "Wyłączone",
-    "biometryNotSupported": "Twoje urządzenie nie obsługuje biometrii."
+    "biometryNotSupported": "Twoje urządzenie nie obsługuje biometrii.",
+    
+    "removeFriendTitle": "Usuń znajomego",
+    "removeFriendContent": "Czy na pewno chcesz usunąć użytkownika \"{name}\" ze znajomych?",
+    "@removeFriendContent": {
+      "placeholders": {
+        "name": {
+          "type": "String"
+        }
+      }
+    },
+    
+    "resendVerificationButton": "Wyślij ponownie",
+    "resendVerificationSuccessMessage": "Link weryfikacyjny został wysłany ponownie.",
+    "resendVerificationErrorMessage": "Nie udało się wysłać linku weryfikacyjnego."
 }

@@ -1,4 +1,4 @@
-import '../../../../core/storage/storage_service.dart';
+﻿import '../../../../core/storage/storage_service.dart';
 import '../../data/data_sources/auth_remote_data_source.dart';
 import '../../data/models/login_request.dart';
 import '../../data/models/register_request.dart';
@@ -17,6 +17,7 @@ class AuthRepositoryImpl implements AuthRepository {
       LoginRequest(login: login, password: password),
     );
     await _storageService.saveToken(response.token);
+    await _storageService.saveRefreshToken(response.refreshToken);
     
     return User(
       id: response.id,
@@ -37,7 +38,15 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    await _storageService.deleteToken();
+    try {
+      final refreshToken = await _storageService.getRefreshToken();
+      if (refreshToken != null) {
+        await _remoteDataSource.logout(refreshToken);
+      }
+    } catch (_) {
+    } finally {
+      await _storageService.deleteToken();
+    }
   }
 
   @override
@@ -67,5 +76,23 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> deleteMyAccount() async {
     await _remoteDataSource.deleteMyAccount();
     await _storageService.deleteToken();
+  }
+
+  @override
+  Future<void> resendVerificationEmail(String email) async {
+    await _remoteDataSource.resendVerificationEmail(email);
+  }
+
+  @override
+  Future<void> registerFcmToken(String fcmToken) async {
+    await _remoteDataSource.registerFcmToken(fcmToken);
+  }
+
+  @override
+  Future<void> unregisterFcmToken(String fcmToken) async {
+    try {
+      await _remoteDataSource.unregisterFcmToken(fcmToken);
+    } catch (_) {
+    }
   }
 }

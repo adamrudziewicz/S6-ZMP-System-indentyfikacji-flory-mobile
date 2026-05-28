@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginResponse {
 
- String? get message; String? get warning; String get id; String get username; String get email; bool get verified; bool get admin; String get token;
+ String? get message; String? get warning; String get id; String get username; String get email; bool get verified; bool get admin; String get token; String get refreshToken;
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LoginResponseCopyWith<LoginResponse> get copyWith => _$LoginResponseCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.token, token) || other.token == token)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,warning,id,username,email,verified,admin,token);
+int get hashCode => Object.hash(runtimeType,message,warning,id,username,email,verified,admin,token,refreshToken);
 
 @override
 String toString() {
-  return 'LoginResponse(message: $message, warning: $warning, id: $id, username: $username, email: $email, verified: $verified, admin: $admin, token: $token)';
+  return 'LoginResponse(message: $message, warning: $warning, id: $id, username: $username, email: $email, verified: $verified, admin: $admin, token: $token, refreshToken: $refreshToken)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LoginResponseCopyWith<$Res>  {
   factory $LoginResponseCopyWith(LoginResponse value, $Res Function(LoginResponse) _then) = _$LoginResponseCopyWithImpl;
 @useResult
 $Res call({
- String? message, String? warning, String id, String username, String email, bool verified, bool admin, String token
+ String? message, String? warning, String id, String username, String email, bool verified, bool admin, String token, String refreshToken
 });
 
 
@@ -65,7 +65,7 @@ class _$LoginResponseCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? message = freezed,Object? warning = freezed,Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? admin = null,Object? token = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? message = freezed,Object? warning = freezed,Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? admin = null,Object? token = null,Object? refreshToken = null,}) {
   return _then(_self.copyWith(
 message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
@@ -75,6 +75,7 @@ as String,email: null == email ? _self.email : email // ignore: cast_nullable_to
 as String,verified: null == verified ? _self.verified : verified // ignore: cast_nullable_to_non_nullable
 as bool,admin: null == admin ? _self.admin : admin // ignore: cast_nullable_to_non_nullable
 as bool,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -160,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token,  String refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginResponse() when $default != null:
-return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token);case _:
+return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token,_that.refreshToken);case _:
   return orElse();
 
 }
@@ -181,10 +182,10 @@ return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token,  String refreshToken)  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponse():
-return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token);case _:
+return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token,_that.refreshToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +202,10 @@ return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? message,  String? warning,  String id,  String username,  String email,  bool verified,  bool admin,  String token,  String refreshToken)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponse() when $default != null:
-return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token);case _:
+return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,_that.verified,_that.admin,_that.token,_that.refreshToken);case _:
   return null;
 
 }
@@ -216,7 +217,7 @@ return $default(_that.message,_that.warning,_that.id,_that.username,_that.email,
 @JsonSerializable()
 
 class _LoginResponse implements LoginResponse {
-  const _LoginResponse({this.message, this.warning, required this.id, required this.username, required this.email, this.verified = false, this.admin = false, required this.token});
+  const _LoginResponse({this.message, this.warning, required this.id, required this.username, required this.email, this.verified = false, this.admin = false, required this.token, required this.refreshToken});
   factory _LoginResponse.fromJson(Map<String, dynamic> json) => _$LoginResponseFromJson(json);
 
 @override final  String? message;
@@ -227,6 +228,7 @@ class _LoginResponse implements LoginResponse {
 @override@JsonKey() final  bool verified;
 @override@JsonKey() final  bool admin;
 @override final  String token;
+@override final  String refreshToken;
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +243,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.token, token) || other.token == token));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponse&&(identical(other.message, message) || other.message == message)&&(identical(other.warning, warning) || other.warning == warning)&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.email, email) || other.email == email)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.admin, admin) || other.admin == admin)&&(identical(other.token, token) || other.token == token)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,message,warning,id,username,email,verified,admin,token);
+int get hashCode => Object.hash(runtimeType,message,warning,id,username,email,verified,admin,token,refreshToken);
 
 @override
 String toString() {
-  return 'LoginResponse(message: $message, warning: $warning, id: $id, username: $username, email: $email, verified: $verified, admin: $admin, token: $token)';
+  return 'LoginResponse(message: $message, warning: $warning, id: $id, username: $username, email: $email, verified: $verified, admin: $admin, token: $token, refreshToken: $refreshToken)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$LoginResponseCopyWith<$Res> implements $LoginResponseCopy
   factory _$LoginResponseCopyWith(_LoginResponse value, $Res Function(_LoginResponse) _then) = __$LoginResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String? message, String? warning, String id, String username, String email, bool verified, bool admin, String token
+ String? message, String? warning, String id, String username, String email, bool verified, bool admin, String token, String refreshToken
 });
 
 
@@ -278,7 +280,7 @@ class __$LoginResponseCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? message = freezed,Object? warning = freezed,Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? admin = null,Object? token = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? message = freezed,Object? warning = freezed,Object? id = null,Object? username = null,Object? email = null,Object? verified = null,Object? admin = null,Object? token = null,Object? refreshToken = null,}) {
   return _then(_LoginResponse(
 message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,warning: freezed == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
@@ -288,6 +290,7 @@ as String,email: null == email ? _self.email : email // ignore: cast_nullable_to
 as String,verified: null == verified ? _self.verified : verified // ignore: cast_nullable_to_non_nullable
 as bool,admin: null == admin ? _self.admin : admin // ignore: cast_nullable_to_non_nullable
 as bool,token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

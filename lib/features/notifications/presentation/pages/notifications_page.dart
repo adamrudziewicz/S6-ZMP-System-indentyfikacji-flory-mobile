@@ -94,15 +94,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text(
-              l10n.navNotifications,
-              style: const TextStyle(
-                fontWeight: FontWeight.w800,
-                color: Colors.white,
-                fontSize: 22,
-                letterSpacing: -0.5,
+            Expanded(
+              child: Text(
+                l10n.navNotifications,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                  fontSize: 22,
+                  letterSpacing: -0.5,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
+            const SizedBox(width: 8),
             if (hasUnread)
               GestureDetector(
                 onTap: () {
@@ -119,9 +123,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     children: [
                       const Icon(Icons.done_all_rounded, color: Colors.white, size: 14),
                       const SizedBox(width: 4),
-                      Text(
-                        l10n.markAsReadButton,
-                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                      Flexible(
+                        child: Text(
+                          l10n.markAsReadButton,
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ],
                   ),

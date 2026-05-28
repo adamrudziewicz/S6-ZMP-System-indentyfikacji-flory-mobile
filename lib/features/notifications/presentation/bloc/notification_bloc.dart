@@ -7,24 +7,28 @@ import '../../domain/use_cases/mark_all_notifications_as_read_use_case.dart';
 import '../../domain/use_cases/mark_notification_as_read_use_case.dart';
 import 'notification_event.dart';
 import 'notification_state.dart';
+import '../../../../core/notifications/push_notification_service.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final GetNotificationsUseCase _getNotifications;
   final GetUnreadNotificationsUseCase _getUnreadNotifications;
   final MarkNotificationAsReadUseCase _markAsRead;
   final MarkAllNotificationsAsReadUseCase _markAllAsRead;
+  final PushNotificationService _pushNotificationService;
 
-  Timer? _pollingTimer;
+  StreamSubscription? _pushSubscription;
 
   NotificationBloc({
     required GetNotificationsUseCase getNotifications,
     required GetUnreadNotificationsUseCase getUnreadNotifications,
     required MarkNotificationAsReadUseCase markAsRead,
     required MarkAllNotificationsAsReadUseCase markAllAsRead,
+    required PushNotificationService pushNotificationService,
   })  : _getNotifications = getNotifications,
         _getUnreadNotifications = getUnreadNotifications,
         _markAsRead = markAsRead,
         _markAllAsRead = markAllAsRead,
+        _pushNotificationService = pushNotificationService,
         super(NotificationInitial()) {
     on<LoadNotifications>(_onLoadNotifications);
     on<LoadUnreadNotifications>(_onLoadUnreadNotifications);
@@ -66,7 +70,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   Future<void> _onMarkNotificationAsRead(MarkNotificationAsRead event, Emitter<NotificationState> emit) async {
     try {
       await _markAsRead(event.notificationId);
-      add(LoadNotifications()); // Reload to show updated status
+      add(LoadNotifications());
     } catch (e) {
       emit(NotificationError(ErrorHandler.mapError(e)));
     }
@@ -84,21 +88,21 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   void _onStartPolling(StartPollingNotifications event, Emitter<NotificationState> emit) {
-    _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _pushSubscription?.cancel();
+    _pushSubscription = _pushNotificationService.onMessage.listen((_) {
       add(PollNotifications());
     });
     add(PollNotifications());
   }
 
   void _onStopPolling(StopPollingNotifications event, Emitter<NotificationState> emit) {
-    _pollingTimer?.cancel();
-    _pollingTimer = null;
+    _pushSubscription?.cancel();
+    _pushSubscription = null;
   }
 
   @override
   Future<void> close() {
-    _pollingTimer?.cancel();
+    _pushSubscription?.cancel();
     return super.close();
   }
 }

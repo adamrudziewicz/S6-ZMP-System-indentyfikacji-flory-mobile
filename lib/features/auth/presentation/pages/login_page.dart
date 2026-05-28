@@ -8,6 +8,7 @@ import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import 'register_page.dart';
+import '../../../../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -123,6 +124,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
             right: -100,
             child: _buildBlurCircle(400, const Color(0xFF1B5E20).withOpacity(0.4)),
           ),
+
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -209,7 +211,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                     ),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Zapamiętaj mnie',
+                                      l10n.rememberMe,
                                       style: TextStyle(
                                         color: Colors.green.shade800,
                                         fontWeight: FontWeight.w600,
@@ -236,6 +238,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                 final l10n = AppLocalizations.of(context)!;
                                 if (state is AuthError) {
                                   String msg;
+                                  SnackBarAction? action;
                                   switch (state.message) {
                                     case 'forgot_password_error':
                                       msg = l10n.forgotPasswordErrorMessage;
@@ -248,6 +251,19 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                       break;
                                     case 'email_not_verified':
                                       msg = l10n.emailNotVerifiedError;
+                                      action = SnackBarAction(
+                                        label: l10n.resendVerificationButton,
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          final login = _loginController.text.trim();
+                                          if (login.isNotEmpty) {
+                                            context.read<AuthBloc>().add(AuthResendVerificationEmailRequested(login));
+                                          }
+                                        },
+                                      );
+                                      break;
+                                    case 'resend_verification_error':
+                                      msg = l10n.resendVerificationErrorMessage;
                                       break;
                                     default:
                                       msg = l10n.loginErrorMessage;
@@ -266,17 +282,28 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                       backgroundColor: Colors.redAccent,
                                       behavior: SnackBarBehavior.floating,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                      action: action,
                                     ),
                                   );
                                 } else if (state is AuthActionSuccess) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(l10n.forgotPasswordSuccessMessage),
-                                      backgroundColor: Colors.green.shade700,
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                    ),
-                                  );
+                                  String successMsg = '';
+                                  if (state.message == 'forgot_password_success') {
+                                    successMsg = l10n.forgotPasswordSuccessMessage;
+                                  } else if (state.message == 'resend_verification_success') {
+                                    successMsg = l10n.resendVerificationSuccessMessage;
+                                  } else if (state.message == 'register_success') {
+                                    successMsg = l10n.registerSuccessMessage;
+                                  }
+                                  if (successMsg.isNotEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(successMsg),
+                                        backgroundColor: Colors.green.shade700,
+                                        behavior: SnackBarBehavior.floating,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                               builder: (context, state) {
@@ -348,6 +375,54 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                       ),
                     ),
                   ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: PopupMenuButton<String>(
+                  offset: const Offset(0, 40),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFF2E7D32).withOpacity(0.5)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Text(
+                      Localizations.localeOf(context).languageCode.toUpperCase(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1B5E20),
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  onSelected: (String langCode) {
+                    MyApp.setLocale(context, Locale(langCode));
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    const PopupMenuItem<String>(
+                      value: 'pl',
+                      child: Text('PL', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'en',
+                      child: Text('EN', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ],
                 ),
               ),
             ),

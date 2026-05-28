@@ -4,25 +4,46 @@ import 'dart:async';
 class StorageService {
   final FlutterSecureStorage _storage;
 
+  String? _cachedToken;
+  String? _cachedRefreshToken;
+
   StorageService() : _storage = const FlutterSecureStorage();
 
   static const String _tokenKey = 'jwt_token';
+  static const String _refreshTokenKey = 'jwt_refresh_token';
   static const String _rememberMeKey = 'remember_me';
 
   final _authStateController = StreamController<bool>.broadcast();
   Stream<bool> get authStateStream => _authStateController.stream;
 
   Future<void> saveToken(String token) async {
+    _cachedToken = token;
     await _storage.write(key: _tokenKey, value: token);
     _authStateController.add(true);
   }
 
+  Future<void> saveRefreshToken(String refreshToken) async {
+    _cachedRefreshToken = refreshToken;
+    await _storage.write(key: _refreshTokenKey, value: refreshToken);
+  }
+
   Future<String?> getToken() async {
-    return await _storage.read(key: _tokenKey);
+    if (_cachedToken != null) return _cachedToken;
+    _cachedToken = await _storage.read(key: _tokenKey);
+    return _cachedToken;
+  }
+
+  Future<String?> getRefreshToken() async {
+    if (_cachedRefreshToken != null) return _cachedRefreshToken;
+    _cachedRefreshToken = await _storage.read(key: _refreshTokenKey);
+    return _cachedRefreshToken;
   }
 
   Future<void> deleteToken() async {
+    _cachedToken = null;
+    _cachedRefreshToken = null;
     await _storage.delete(key: _tokenKey);
+    await _storage.delete(key: _refreshTokenKey);
     _authStateController.add(false);
   }
 

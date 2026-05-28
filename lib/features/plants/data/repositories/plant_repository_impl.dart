@@ -1,16 +1,24 @@
 import 'dart:io';
+import '../../../../core/network/network_info.dart';
 import '../../domain/entities/plant.dart';
 import '../../domain/entities/plant_photo.dart';
 import '../../domain/repositories/plant_repository.dart';
 import '../data_sources/plant_remote_data_source.dart';
+import '../data_sources/plant_local_data_source.dart';
 import '../models/plant_confirm_request.dart';
 import '../models/plant_response.dart';
 import '../models/plant_update_request.dart';
 
 class PlantRepositoryImpl implements PlantRepository {
   final PlantRemoteDataSource _remoteDataSource;
+  final PlantLocalDataSource _localDataSource;
+  final NetworkInfo _networkInfo;
 
-  PlantRepositoryImpl(this._remoteDataSource);
+  PlantRepositoryImpl(
+    this._remoteDataSource,
+    this._localDataSource,
+    this._networkInfo,
+  );
 
   Plant _mapDtoToEntity(PlantResponse dto) {
     final hasPhotos = dto.photos.isNotEmpty;
@@ -82,8 +90,26 @@ class PlantRepositoryImpl implements PlantRepository {
 
   @override
   Future<List<Plant>> getPlants(String herbariumId) async {
-    final responseList = await _remoteDataSource.getPlants(herbariumId);
-    return responseList.map(_mapDtoToEntity).toList();
+    final isConnected = await _networkInfo.isConnected;
+    if (isConnected) {
+      try {
+        final responseList = await _remoteDataSource.getPlants(herbariumId);
+        await _localDataSource.cachePlants(herbariumId, responseList);
+        return responseList.map(_mapDtoToEntity).toList();
+      } catch (e) {
+        final localData = await _localDataSource.getCachedPlants(herbariumId);
+        if (localData.isNotEmpty) {
+          return localData.map(_mapDtoToEntity).toList();
+        }
+        rethrow;
+      }
+    } else {
+      final localData = await _localDataSource.getCachedPlants(herbariumId);
+      if (localData.isNotEmpty) {
+        return localData.map(_mapDtoToEntity).toList();
+      }
+      return [];
+    }
   }
 
   @override
