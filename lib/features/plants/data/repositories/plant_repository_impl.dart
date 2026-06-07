@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entities/plant.dart';
 import '../../domain/entities/plant_photo.dart';
@@ -96,7 +97,7 @@ class PlantRepositoryImpl implements PlantRepository {
         final responseList = await _remoteDataSource.getPlants(herbariumId);
         await _localDataSource.cachePlants(herbariumId, responseList);
         return responseList.map(_mapDtoToEntity).toList();
-      } catch (e) {
+      } on DioException catch (e) {
         final localData = await _localDataSource.getCachedPlants(herbariumId);
         if (localData.isNotEmpty) {
           return localData.map(_mapDtoToEntity).toList();
@@ -123,10 +124,8 @@ class PlantRepositoryImpl implements PlantRepository {
   }
 
   @override
-  Future<Plant> updatePhotoDescription(String herbariumId, String plantId, String photoId, String description) async {
+  Future<void> updatePhotoDescription(String herbariumId, String plantId, String photoId, String description) async {
     await _remoteDataSource.updatePhotoDescription(herbariumId, plantId, photoId, description);
-    final response = await _remoteDataSource.getPlant(herbariumId, plantId);
-    return _mapDtoToEntity(response);
   }
 
   @override

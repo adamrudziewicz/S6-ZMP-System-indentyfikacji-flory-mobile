@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
 import '../../../../core/storage/storage_service.dart';
 import '../../../../core/biometry/biometry_service.dart';
 import '../../domain/use_cases/login_use_case.dart';
@@ -10,6 +10,7 @@ import '../../domain/use_cases/forgot_password_use_case.dart';
 import '../../domain/use_cases/get_me_use_case.dart';
 import '../../domain/use_cases/resend_verification_email_use_case.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/exceptions/auth_exceptions.dart';
 import '../../../../core/notifications/push_notification_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
@@ -52,7 +53,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _authRepository = authRepository,
         super(AuthInitial()) {
     on<AuthStarted>(_onAuthStarted);
+    on<AuthLoadCredentialsRequested>(_onAuthLoadCredentialsRequested);
     on<AuthLoginRequested>(_onAuthLoginRequested);
+    on<AuthBiometricLoginRequested>(_onAuthBiometricLoginRequested);
     on<AuthRegisterRequested>(_onAuthRegisterRequested);
     on<AuthLogoutRequested>(_onAuthLogoutRequested);
     on<AuthForgotPasswordRequested>(_onAuthForgotPasswordRequested);
@@ -78,14 +81,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (token != null) {
       try {
         await _authRepository.registerFcmToken(token);
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Failed to register FCM token: $e', name: 'AuthBloc');
+      }
     }
 
     _fcmTokenSubscription?.cancel();
     _fcmTokenSubscription = _pushNotificationService.onTokenRefresh.listen((newToken) async {
       try {
         await _authRepository.registerFcmToken(newToken);
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Failed to register new FCM token: $e', name: 'AuthBloc');
+      }
     });
   }
 
@@ -115,7 +122,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           final user = await _getMeUseCase();
           await _initPushNotifications();
           emit(AuthAuthenticated(user: user));
-        } catch (_) {
+        } catch (e) {
+          developer.log('Failed to get me (biometry auth): $e', name: 'AuthBloc');
           await _initPushNotifications();
           emit(const AuthAuthenticated());
         }
@@ -128,7 +136,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final user = await _getMeUseCase();
         await _initPushNotifications();
         emit(AuthAuthenticated(user: user));
-      } catch (_) {
+      } catch (e) {
+        developer.log('Failed to get me (normal auth): $e', name: 'AuthBloc');
         await _initPushNotifications();
         emit(const AuthAuthenticated());
       }
@@ -141,7 +150,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _loginUseCase(event.login, event.password);
       if (!user.verified) {
         await _logoutUseCase();
-        emit(const AuthError('email_not_verified'));
+        emit(AuthErrorEmailNotVerified());
         return;
       }
       
@@ -158,16 +167,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       
       await _initPushNotifications();
       emit(AuthAuthenticated(user: user));
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        emit(const AuthError('login_invalid_credentials'));
-      } else if (e.response?.statusCode == 400) {
-        emit(const AuthError('login_invalid_request'));
-      } else {
-        emit(const AuthError('login_error'));
-      }
+    } on InvalidCredentialsException {
+      emit(AuthErrorInvalidCredentials());
+    } on InvalidRequestException {
+      emit(AuthErrorInvalidRequest());
     } catch (e) {
-      emit(const AuthError('login_error'));
+      developer.log('Login failed with unknown error: $e', name: 'AuthBloc');
+      emit(AuthErrorUnknown());
+    }
+  }
+
+  Future<void> _onAuthBiometricLoginRequested(AuthBiometricLoginRequested event, Emitter<AuthState> emit) async {
+    final authenticated = await _biometryService.authenticate();
+    if (authenticated) {
+      final username = await _storageService.getSavedUsername();
+      final password = await _storageService.getSavedPassword();
+      final rememberMe = await _storageService.getRememberMe();
+
+      if (username != null && password != null) {
+        add(AuthLoginRequested(username, password, rememberMe: rememberMe));
+      } else {
+        emit(AuthErrorInvalidCredentials());
+      }
+    } else {
+      emit(AuthErrorInvalidCredentials());
     }
   }
 
@@ -175,18 +198,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       await _registerUseCase(event.username, event.email, event.password);
-      emit(const AuthActionSuccess('register_success'));
+      emit(AuthRegisterSuccess());
       emit(AuthUnauthenticated());
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 409) {
-        emit(const AuthError('register_conflict'));
-      } else if (e.response?.statusCode == 400) {
-        emit(const AuthError('register_invalid_request'));
-      } else {
-        emit(const AuthError('register_error'));
-      }
+    } on UserConflictException {
+      emit(AuthErrorUserConflict());
+    } on InvalidRequestException {
+      emit(AuthErrorInvalidRequest());
     } catch (e) {
-      emit(const AuthError('register_error'));
+      developer.log('Register failed with unknown error: $e', name: 'AuthBloc');
+      emit(AuthErrorUnknown());
     }
   }
 
@@ -198,7 +218,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (fcmToken != null) {
       try {
         await _authRepository.unregisterFcmToken(fcmToken);
-      } catch (_) {}
+      } catch (e) {
+        developer.log('Failed to unregister FCM token: $e', name: 'AuthBloc');
+      }
     }
 
     await _logoutUseCase();
@@ -209,10 +231,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       await _forgotPasswordUseCase(event.email);
-      emit(const AuthActionSuccess('forgot_password_success'));
+      emit(AuthForgotPasswordSuccess());
       emit(AuthUnauthenticated());
     } catch (e) {
-      emit(const AuthError('forgot_password_error'));
+      developer.log('Forgot password failed: $e', name: 'AuthBloc');
+      emit(AuthErrorUnknown());
     }
   }
 
@@ -220,11 +243,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthLoading());
     try {
       await _resendVerificationEmailUseCase(event.email);
-      emit(const AuthActionSuccess('resend_verification_success'));
+      emit(AuthResendVerificationSuccess());
       emit(AuthUnauthenticated());
     } catch (e) {
-      emit(const AuthError('resend_verification_error'));
+      developer.log('Resend verification failed: $e', name: 'AuthBloc');
+      emit(AuthErrorUnknown());
       emit(AuthUnauthenticated());
     }
+  }
+
+  Future<void> _onAuthLoadCredentialsRequested(AuthLoadCredentialsRequested event, Emitter<AuthState> emit) async {
+    final canCheck = await _biometryService.canCheckBiometrics();
+    final isEnabled = await _biometryService.isBiometryEnabled();
+    final savedUser = await _storageService.getSavedUsername();
+    final savedPass = await _storageService.getSavedPassword();
+    
+    final storedRememberMe = await _storageService.getRememberMe();
+
+    final isBiometryAvailable = canCheck && isEnabled && savedUser != null && savedPass != null;
+
+    emit(AuthCredentialsLoaded(
+      login: savedUser ?? '',
+      password: (savedPass != null && storedRememberMe) ? savedPass : '',
+      rememberMe: storedRememberMe,
+      isBiometryAvailable: isBiometryAvailable,
+    ));
+    emit(AuthUnauthenticated());
   }
 }

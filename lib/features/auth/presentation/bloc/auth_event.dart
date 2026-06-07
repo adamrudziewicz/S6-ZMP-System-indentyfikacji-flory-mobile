@@ -50,3 +50,7 @@ class AuthResendVerificationEmailRequested extends AuthEvent {
   @override
   List<Object> get props => [email];
 }
+
+class AuthBiometricLoginRequested extends AuthEvent {}
+
+class AuthLoadCredentialsRequested extends AuthEvent {}

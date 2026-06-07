@@ -925,6 +925,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to resend verification link.'**
   String get resendVerificationErrorMessage;
+
+  /// No description provided for @errorSessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Logging out...'**
+  String get errorSessionExpired;
+
+  /// No description provided for @errorAccessDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Access denied to this resource.'**
+  String get errorAccessDenied;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource not found.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'Data conflict.'**
+  String get errorConflict;
+
+  /// No description provided for @errorConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Server connection error.'**
+  String get errorConnection;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get errorUnexpected;
 }
 
 class _AppLocalizationsDelegate

@@ -1,8 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer' as developer;
+import '../constants/channel_constants.dart';
 
 class SecurityService {
-  static const _channel = MethodChannel('pl.zielnik/security');
+  static const _channel = MethodChannel(ChannelConstants.securityChannel);
   static const _secureScreenKey = 'secure_screen_enabled';
 
   Future<bool> isSecureScreenEnabled() async {
@@ -23,9 +25,9 @@ class SecurityService {
 
   Future<void> _applySecureScreen(bool enabled) async {
     try {
-      await _channel.invokeMethod('setSecureScreen', {'enabled': enabled});
-    } on PlatformException catch (_) {
-
+      await _channel.invokeMethod(ChannelConstants.methodSetSecureScreen, {'enabled': enabled});
+    } on PlatformException catch (e) {
+      developer.log('Failed to apply secure screen: $e', name: 'SecurityService');
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/network/app_exception.dart';
 import '../../domain/entities/herbarium.dart';
 
 abstract class HerbariaState extends Equatable {
@@ -22,12 +23,12 @@ class HerbariaLoaded extends HerbariaState {
 }
 
 class HerbariaError extends HerbariaState {
-  final String message;
+  final AppException exception;
 
-  const HerbariaError(this.message);
+  const HerbariaError(this.exception);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [exception];
 }
 
 class HerbariumActionSuccess extends HerbariaState {

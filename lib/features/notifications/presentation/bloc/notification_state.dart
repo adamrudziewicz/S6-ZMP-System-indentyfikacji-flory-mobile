@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/network/app_exception.dart';
 import '../../domain/entities/notification.dart';
 
 abstract class NotificationState extends Equatable {
@@ -22,12 +23,12 @@ class NotificationLoaded extends NotificationState {
 }
 
 class NotificationError extends NotificationState {
-  final String message;
+  final AppException exception;
 
-  const NotificationError(this.message);
+  const NotificationError(this.exception);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [exception];
 }
 
 class NotificationActionSuccess extends NotificationState {

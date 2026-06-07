@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/network/app_exception.dart';
 import '../../domain/entities/plant.dart';
 
 abstract class PlantIdentificationState extends Equatable {
@@ -22,10 +23,10 @@ class PlantIdentificationSuccess extends PlantIdentificationState {
 }
 
 class PlantIdentificationError extends PlantIdentificationState {
-  final String message;
+  final AppException exception;
 
-  const PlantIdentificationError(this.message);
+  const PlantIdentificationError(this.exception);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [exception];
 }

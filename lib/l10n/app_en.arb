@@ -181,5 +181,11 @@
     
     "resendVerificationButton": "Resend",
     "resendVerificationSuccessMessage": "Verification link has been resent.",
-    "resendVerificationErrorMessage": "Failed to resend verification link."
+    "resendVerificationErrorMessage": "Failed to resend verification link.",
+    "errorSessionExpired": "Session expired. Logging out...",
+    "errorAccessDenied": "Access denied to this resource.",
+    "errorNotFound": "Resource not found.",
+    "errorConflict": "Data conflict.",
+    "errorConnection": "Server connection error.",
+    "errorUnexpected": "An unexpected error occurred."
 }

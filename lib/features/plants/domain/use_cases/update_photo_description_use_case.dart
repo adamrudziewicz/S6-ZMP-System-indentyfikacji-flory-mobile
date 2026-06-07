@@ -6,7 +6,7 @@ class UpdatePhotoDescriptionUseCase {
 
   UpdatePhotoDescriptionUseCase(this.repository);
 
-  Future<Plant> call(String herbariumId, String plantId, String photoId, String description) {
+  Future<void> call(String herbariumId, String plantId, String photoId, String description) {
     return repository.updatePhotoDescription(herbariumId, plantId, photoId, description);
   }
 }

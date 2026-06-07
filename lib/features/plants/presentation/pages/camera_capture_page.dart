@@ -1,10 +1,12 @@
 import 'dart:io';
+import 'dart:developer' as developer;
 import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_exif_rotation/flutter_exif_rotation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/constants/ui_constants.dart';
 import 'plant_editor_page.dart';
 
 class CameraCapturePage extends StatefulWidget {
@@ -25,7 +27,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    _animController = AnimationController(vsync: this, duration: UiConstants.defaultAnimationDuration);
     _initCamera();
   }
 
@@ -57,6 +59,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> with SingleTicker
         });
       }
     } catch (e) {
+      developer.log('Failed to initialize camera: $e', name: 'CameraCapturePage');
     }
   }
 
@@ -156,11 +159,11 @@ class _CameraCapturePageState extends State<CameraCapturePage> with SingleTicker
 
           Center(
             child: Container(
-              width: size.width * 0.8,
-              height: size.width * 0.8,
+              width: size.width * UiConstants.cameraFocusBoxSizeRatio,
+              height: size.width * UiConstants.cameraFocusBoxSizeRatio,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
-                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 2),
+                borderRadius: BorderRadius.circular(UiConstants.cameraFocusBoxCornerBorder),
               ),
             ),
           ),
@@ -173,16 +176,16 @@ class _CameraCapturePageState extends State<CameraCapturePage> with SingleTicker
               child: GestureDetector(
                 onTap: _takePicture,
                 child: Container(
-                  height: 80,
-                  width: 80,
+                  height: UiConstants.cameraOuterRingSize,
+                  width: UiConstants.cameraOuterRingSize,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 4),
+                    border: Border.all(color: Colors.white, width: UiConstants.cameraOuterRingBorder),
                   ),
                   child: Center(
                     child: Container(
-                      height: 64,
-                      width: 64,
+                      height: UiConstants.cameraInnerCircleSize,
+                      width: UiConstants.cameraInnerCircleSize,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.white,

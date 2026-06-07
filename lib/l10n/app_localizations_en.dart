@@ -449,4 +449,22 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get resendVerificationErrorMessage =>
       'Failed to resend verification link.';
+
+  @override
+  String get errorSessionExpired => 'Session expired. Logging out...';
+
+  @override
+  String get errorAccessDenied => 'Access denied to this resource.';
+
+  @override
+  String get errorNotFound => 'Resource not found.';
+
+  @override
+  String get errorConflict => 'Data conflict.';
+
+  @override
+  String get errorConnection => 'Server connection error.';
+
+  @override
+  String get errorUnexpected => 'An unexpected error occurred.';
 }

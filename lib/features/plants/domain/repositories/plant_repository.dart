@@ -6,6 +6,6 @@ abstract class PlantRepository {
   Future<Plant> confirmPlant(String herbariumId, String pendingPhotoId, String decisionType, {String? existingPlantId});
   Future<List<Plant>> getPlants(String herbariumId);
   Future<Plant> updatePlantName(String herbariumId, String plantId, String name);
-  Future<Plant> updatePhotoDescription(String herbariumId, String plantId, String photoId, String description);
+  Future<void> updatePhotoDescription(String herbariumId, String plantId, String photoId, String description);
   Future<void> deletePlant(String herbariumId, String plantId);
 }

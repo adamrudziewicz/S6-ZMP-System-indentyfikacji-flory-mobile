@@ -76,7 +76,7 @@ class _FriendsPageState extends State<FriendsPage> with SingleTickerProviderStat
           } else if (state is FriendsError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.exception.getLocalizedMessage(l10n)),
                 backgroundColor: Colors.redAccent,
                 behavior: SnackBarBehavior.floating,
               ),

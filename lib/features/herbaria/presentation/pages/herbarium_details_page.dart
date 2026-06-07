@@ -35,7 +35,7 @@ class _HerbariumDetailsPageState extends State<HerbariumDetailsPage> {
           if (state is PlantListError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.exception.getLocalizedMessage(l10n)),
                 backgroundColor: Colors.redAccent,
                 behavior: SnackBarBehavior.floating,
               ),

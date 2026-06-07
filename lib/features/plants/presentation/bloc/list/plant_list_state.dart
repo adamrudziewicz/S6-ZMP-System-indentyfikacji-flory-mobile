@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../../core/network/app_exception.dart';
 import '../../../domain/entities/plant.dart';
 
 abstract class PlantListState extends Equatable {
@@ -22,10 +23,10 @@ class PlantListLoaded extends PlantListState {
 }
 
 class PlantListError extends PlantListState {
-  final String message;
+  final AppException exception;
 
-  const PlantListError(this.message);
+  const PlantListError(this.exception);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [exception];
 }

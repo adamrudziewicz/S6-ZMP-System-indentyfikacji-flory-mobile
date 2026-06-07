@@ -36,7 +36,7 @@ class PlantListBloc extends Bloc<PlantListEvent, PlantListState> {
       final plants = await _getPlantsUseCase(event.herbariumId);
       emit(PlantListLoaded(plants));
     } catch (e) {
-      emit(PlantListError('Nie udało się załadować roślin. ${ErrorHandler.mapError(e)}'));
+      emit(PlantListError(ErrorHandler.mapError(e)));
     }
   }
 
@@ -60,7 +60,7 @@ class PlantListBloc extends Bloc<PlantListEvent, PlantListState> {
       
       emit(PlantListLoaded(updatedList));
     } catch (e) {
-      emit(PlantListError('Nie udało się zmienić nazwy rośliny. ${ErrorHandler.mapError(e)}'));
+      emit(PlantListError(ErrorHandler.mapError(e)));
       if (currentPlants.isNotEmpty) {
         emit(PlantListLoaded(currentPlants));
       }
@@ -75,20 +75,18 @@ class PlantListBloc extends Bloc<PlantListEvent, PlantListState> {
     }
     
     try {
-      final updatedPlant = await _updatePhotoDescriptionUseCase(
+      await _updatePhotoDescriptionUseCase(
         event.herbariumId,
         event.plantId,
         event.photoId,
         event.newDescription,
       );
       
-      final updatedList = currentPlants.map((plant) {
-        return plant.id == event.plantId ? updatedPlant : plant;
-      }).toList();
+      final updatedList = await _getPlantsUseCase(event.herbariumId);
       
       emit(PlantListLoaded(updatedList));
     } catch (e) {
-      emit(PlantListError('Nie udało się zapisać opisu. ${ErrorHandler.mapError(e)}'));
+      emit(PlantListError(ErrorHandler.mapError(e)));
       if (currentPlants.isNotEmpty) {
         emit(PlantListLoaded(currentPlants));
       }
@@ -109,7 +107,7 @@ class PlantListBloc extends Bloc<PlantListEvent, PlantListState> {
       
       emit(PlantListLoaded(updatedList));
     } catch (e) {
-      emit(PlantListError('Nie udało się usunąć rośliny. ${ErrorHandler.mapError(e)}'));
+      emit(PlantListError(ErrorHandler.mapError(e)));
       if (currentPlants.isNotEmpty) {
         emit(PlantListLoaded(currentPlants));
       }

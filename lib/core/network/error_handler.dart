@@ -1,30 +1,32 @@
 import 'package:dio/dio.dart';
+import 'app_exception.dart';
 
 class ErrorHandler {
-  static String mapError(dynamic error) {
+  static AppException mapError(dynamic error) {
     if (error is DioException) {
       final statusCode = error.response?.statusCode;
       final responseData = error.response?.data;
+      String? serverMsg;
+      
+      if (responseData is String && responseData.isNotEmpty) {
+        serverMsg = responseData;
+      } else if (responseData is Map<String, dynamic> && responseData['message'] is String) {
+        serverMsg = responseData['message'] as String;
+      }
 
       switch (statusCode) {
         case 401:
-          return 'Sesja wygasła. Wylogowywanie...';
+          return SessionExpiredException(serverMsg);
         case 403:
-          if (responseData is String && responseData.isNotEmpty) {
-            return responseData;
-          }
-          return 'Brak dostępu do tego zasobu.';
+          return ForbiddenException(serverMsg);
         case 404:
-          return 'Nie znaleziono zasobu.';
+          return NotFoundException(serverMsg);
         case 409:
-          if (responseData is String && responseData.isNotEmpty) {
-            return responseData;
-          }
-          return 'Konflikt danych.';
+          return ConflictException(serverMsg);
         default:
-          return 'Błąd połączenia z serwerem.';
+          return NetworkException(serverMsg);
       }
     }
-    return 'Wystąpił nieoczekiwany błąd.';
+    return UnknownException();
   }
 }

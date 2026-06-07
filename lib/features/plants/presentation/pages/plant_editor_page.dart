@@ -73,7 +73,7 @@ class _PlantEditorPageState extends State<PlantEditorPage> {
           } else if (state is PlantIdentificationError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('${l10n.identificationError}${state.message}'),
+                content: Text('${l10n.identificationError}${state.exception.getLocalizedMessage(l10n)}'),
                 backgroundColor: Colors.redAccent,
                 behavior: SnackBarBehavior.floating,
               ),

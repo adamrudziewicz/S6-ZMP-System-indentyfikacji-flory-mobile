@@ -178,5 +178,11 @@
     
     "resendVerificationButton": "Wyślij ponownie",
     "resendVerificationSuccessMessage": "Link weryfikacyjny został wysłany ponownie.",
-    "resendVerificationErrorMessage": "Nie udało się wysłać linku weryfikacyjnego."
+    "resendVerificationErrorMessage": "Nie udało się wysłać linku weryfikacyjnego.",
+    "errorSessionExpired": "Sesja wygasła. Wylogowywanie...",
+    "errorAccessDenied": "Brak dostępu do tego zasobu.",
+    "errorNotFound": "Nie znaleziono zasobu.",
+    "errorConflict": "Konflikt danych.",
+    "errorConnection": "Błąd połączenia z serwerem.",
+    "errorUnexpected": "Wystąpił nieoczekiwany błąd."
 }

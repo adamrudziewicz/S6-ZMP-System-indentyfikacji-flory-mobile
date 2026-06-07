@@ -2,6 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/presentation/widgets/custom_text_field.dart';
+import '../../../../core/utils/password_validator.dart';
+import '../widgets/auth_layout.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
@@ -20,11 +23,13 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   String? _errorMessage;
   bool _isPasswordObscure = true;
 
-  bool _hasMinLength = false;
-  bool _hasUppercase = false;
-  bool _hasLowercase = false;
-  bool _hasNumber = false;
-  bool _hasSpecialChar = false;
+  PasswordStrength _passwordStrength = const PasswordStrength(
+    hasMinLength: false,
+    hasUppercase: false,
+    hasLowercase: false,
+    hasNumber: false,
+    hasSpecialChar: false,
+  );
 
   late AnimationController _animController;
   late Animation<double> _fadeAnimation;
@@ -39,18 +44,10 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   }
 
   void _validatePassword() {
-    final password = _passwordController.text;
     setState(() {
-      _hasMinLength = password.length >= 8;
-      _hasUppercase = password.contains(RegExp(r'[A-Z]'));
-      _hasLowercase = password.contains(RegExp(r'[a-z]'));
-      _hasNumber = password.contains(RegExp(r'[0-9]'));
-      _hasSpecialChar = password.contains(RegExp(r'[!@#\$%\^&\*\(\)_\+\-\=\[\]\{\};:"\\|,.<>\/?]'));
+      _passwordStrength = PasswordValidator.validate(_passwordController.text);
     });
   }
-
-  bool get _isPasswordValid =>
-      _hasMinLength && _hasUppercase && _hasLowercase && _hasNumber && _hasSpecialChar;
 
   @override
   void dispose() {
@@ -65,43 +62,9 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Color(0xFF1B5E20)),
-      ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFE8F5E9),
-                    Color(0xFFA5D6A7),
-                    Color(0xFF388E3C),
-                  ],
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  stops: [0.0, 0.5, 1.0],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 50,
-            right: -80,
-            child: _buildBlurCircle(300, Colors.white.withValues(alpha: 0.3)),
-          ),
-          Positioned(
-            bottom: -50,
-            left: -100,
-            child: _buildBlurCircle(400, const Color(0xFF1B5E20).withValues(alpha: 0.3)),
-          ),
-          SafeArea(
-            child: Center(
+    return AuthBackgroundLayout(
+      showBackButton: true,
+      child: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
                 child: FadeTransition(
@@ -149,20 +112,20 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                               ),
                             ),
                             const SizedBox(height: 40),
-                            _buildTextField(
+                            CustomTextField(
                               controller: _usernameController,
                               label: l10n.usernameLabel,
                               icon: Icons.person_outline_rounded,
                             ),
                             const SizedBox(height: 16),
-                            _buildTextField(
+                            CustomTextField(
                               controller: _emailController,
                               label: l10n.emailLabel,
                               icon: Icons.alternate_email_rounded,
                               keyboardType: TextInputType.emailAddress,
                             ),
                             const SizedBox(height: 16),
-                            _buildTextField(
+                            CustomTextField(
                               controller: _passwordController,
                               label: l10n.passwordLabel,
                               icon: Icons.lock_outline_rounded,
@@ -181,11 +144,11 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                               spacing: 8,
                               runSpacing: 8,
                               children: [
-                                _buildRequirementChip(l10n.pwdMinLength, _hasMinLength),
-                                _buildRequirementChip(l10n.pwdUppercase, _hasUppercase),
-                                _buildRequirementChip(l10n.pwdLowercase, _hasLowercase),
-                                _buildRequirementChip(l10n.pwdNumber, _hasNumber),
-                                _buildRequirementChip(l10n.pwdSpecial, _hasSpecialChar),
+                                _buildRequirementChip(l10n.pwdMinLength, _passwordStrength.hasMinLength),
+                                _buildRequirementChip(l10n.pwdUppercase, _passwordStrength.hasUppercase),
+                                _buildRequirementChip(l10n.pwdLowercase, _passwordStrength.hasLowercase),
+                                _buildRequirementChip(l10n.pwdNumber, _passwordStrength.hasNumber),
+                                _buildRequirementChip(l10n.pwdSpecial, _passwordStrength.hasSpecialChar),
                               ],
                             ),
                             const SizedBox(height: 24),
@@ -193,19 +156,8 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                               listener: (context, state) {
                                 final l10n = AppLocalizations.of(context)!;
                                 if (state is AuthError) {
-                                  String msg;
-                                  switch (state.message) {
-                                    case 'register_conflict':
-                                      msg = l10n.registerConflictError;
-                                      break;
-                                    case 'register_invalid_request':
-                                      msg = l10n.registerInvalidRequestError;
-                                      break;
-                                    case 'register_error':
-                                    default:
-                                      msg = l10n.registerErrorMessage;
-                                      break;
-                                  }
+                                  final msg = state.getLocalizedMessage(l10n);
+                                  
                                   setState(() {
                                     _errorMessage = msg;
                                   });
@@ -217,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     ),
                                   );
-                                } else if (state is AuthActionSuccess) {
+                                } else if (state is AuthRegisterSuccess) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(l10n.registerSuccessMessage),
@@ -267,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                                             elevation: 0,
                                           ),
-                                          onPressed: _isPasswordValid
+                                          onPressed: _passwordStrength.isValid
                                               ? () {
                                                   FocusScope.of(context).unfocus();
                                                   setState(() => _errorMessage = null);
@@ -295,9 +247,6 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
                 ),
               ),
             ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -346,41 +295,6 @@ class _RegisterPageState extends State<RegisterPage> with SingleTickerProviderSt
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
         child: Container(color: Colors.transparent),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool isObscure = false,
-    TextInputType keyboardType = TextInputType.text,
-    Widget? suffixIcon,
-  }) {
-    return TextField(
-      controller: controller,
-      obscureText: isObscure,
-      keyboardType: keyboardType,
-      style: const TextStyle(fontWeight: FontWeight.w500),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.grey.shade600),
-        prefixIcon: IgnorePointer(
-          child: Icon(icon, color: const Color(0xFF2E7D32)),
-        ),
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: Colors.grey.shade100,
-        contentPadding: const EdgeInsets.symmetric(vertical: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF2E7D32), width: 2),
-        ),
       ),
     );
   }

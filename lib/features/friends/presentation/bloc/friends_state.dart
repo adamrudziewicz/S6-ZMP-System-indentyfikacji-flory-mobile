@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../../../core/network/app_exception.dart';
 import '../../domain/entities/friend.dart';
 
 abstract class FriendsState extends Equatable {
@@ -28,12 +29,12 @@ class FriendsLoaded extends FriendsState {
 }
 
 class FriendsError extends FriendsState {
-  final String message;
+  final AppException exception;
 
-  const FriendsError(this.message);
+  const FriendsError(this.exception);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [exception];
 }
 
 class FriendActionSuccess extends FriendsState {

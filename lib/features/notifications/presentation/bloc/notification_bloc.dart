@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/network/error_handler.dart';
 import '../../domain/use_cases/get_notifications_use_case.dart';
@@ -54,6 +55,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       final notifications = await _getNotifications();
       emit(NotificationLoaded(notifications));
     } catch (e) {
+      developer.log('Failed to poll notifications: $e', name: 'NotificationBloc');
     }
   }
 

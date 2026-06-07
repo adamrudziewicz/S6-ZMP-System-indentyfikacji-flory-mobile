@@ -448,4 +448,22 @@ class AppLocalizationsPl extends AppLocalizations {
   @override
   String get resendVerificationErrorMessage =>
       'Nie udało się wysłać linku weryfikacyjnego.';
+
+  @override
+  String get errorSessionExpired => 'Sesja wygasła. Wylogowywanie...';
+
+  @override
+  String get errorAccessDenied => 'Brak dostępu do tego zasobu.';
+
+  @override
+  String get errorNotFound => 'Nie znaleziono zasobu.';
+
+  @override
+  String get errorConflict => 'Konflikt danych.';
+
+  @override
+  String get errorConnection => 'Błąd połączenia z serwerem.';
+
+  @override
+  String get errorUnexpected => 'Wystąpił nieoczekiwany błąd.';
 }

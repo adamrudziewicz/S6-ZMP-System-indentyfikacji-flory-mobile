@@ -1,6 +1,7 @@
 ﻿# OpenAPI spec
 api-docs.json
 api-docs (1).json
+api-docs (2).json
 # Miscellaneous
 *.class
 *.log
@@ -53,3 +54,5 @@ google-services.json
 # Environment Variables
 .env
 
+# Icon
+assets/app_icon.png

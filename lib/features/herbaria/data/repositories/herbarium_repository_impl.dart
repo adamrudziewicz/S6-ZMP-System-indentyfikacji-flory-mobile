@@ -5,6 +5,7 @@ import '../data_sources/herbarium_local_data_source.dart';
 import '../data_sources/herbarium_remote_data_source.dart';
 import '../models/herbarium_request.dart';
 import '../models/herbarium_response.dart';
+import 'dart:developer' as developer;
 
 class HerbariumRepositoryImpl implements HerbariumRepository {
   final HerbariumRemoteDataSource _remoteDataSource;
@@ -41,7 +42,8 @@ class HerbariumRepositoryImpl implements HerbariumRepository {
       try {
         final request = HerbariumRequest.fromJson(requestJson);
         await _remoteDataSource.createHerbarium(request);
-      } catch (_) {
+      } catch (e) {
+        developer.log('Failed to sync herbarium creation: $e', name: 'HerbariumRepositoryImpl');
       }
     }
     await _localDataSource.clearSyncQueue();

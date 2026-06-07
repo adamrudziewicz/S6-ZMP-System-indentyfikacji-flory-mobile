@@ -1,6 +1,7 @@
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:developer' as developer;
 
 class BiometryService {
   final LocalAuthentication _auth = LocalAuthentication();
@@ -10,7 +11,8 @@ class BiometryService {
       final bool canAuthenticateWithBiometrics = await _auth.canCheckBiometrics;
       final bool canAuthenticate = await _auth.isDeviceSupported();
       return canAuthenticateWithBiometrics || canAuthenticate;
-    } catch (_) {
+    } catch (e) {
+      developer.log('canCheckBiometrics failed: $e', name: 'BiometryService');
       return false;
     }
   }
@@ -22,6 +24,7 @@ class BiometryService {
       );
       return didAuthenticate;
     } catch (e) {
+      developer.log('authenticate failed: $e', name: 'BiometryService');
       return false;
     }
   }
