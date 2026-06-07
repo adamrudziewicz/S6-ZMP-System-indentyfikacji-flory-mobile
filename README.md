@@ -1,4 +1,4 @@
-# System Identyfikacji Flory (Aplikacja Mobilna) na przedmiot Zaawansowane Metody Programowania
+# System Identyfikacji Flory (Aplikacja Mobilna)
 
 Aplikacja mobilna projektu **System Identyfikacji Flory** zrealizowana w ramach przedmiotu *Zaawansowane Metody Programowania*. Służy do automatycznego rozpoznawania i katalogowania roślin przy wykorzystaniu sztucznej inteligencji.
 
