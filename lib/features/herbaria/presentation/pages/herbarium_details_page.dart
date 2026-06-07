@@ -8,6 +8,7 @@ import '../../../../features/plants/presentation/bloc/list/plant_list_state.dart
 import '../../../../features/plants/presentation/pages/camera_capture_page.dart';
 import '../../../../core/widgets/authenticated_image.dart';
 import '../../../../features/plants/domain/entities/plant.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HerbariumDetailsPage extends StatefulWidget {
   final Herbarium herbarium;
@@ -127,10 +128,10 @@ class _HerbariumDetailsPageState extends State<HerbariumDetailsPage> {
         background: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://picsum.photos/seed/${widget.herbarium.id}/800/600',
+            CachedNetworkImage(
+              imageUrl: 'https://picsum.photos/seed/${widget.herbarium.id}/800/600',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
+              errorWidget: (context, url, error) => Container(
                 color: const Color(0xFF2E7D32),
               ),
             ),

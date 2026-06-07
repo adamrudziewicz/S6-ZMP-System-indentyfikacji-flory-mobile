@@ -364,6 +364,24 @@ class AppLocalizationsPl extends AppLocalizations {
   String get deleteHerbarium => 'Usuń zielnik';
 
   @override
+  String get herbariumCreatedSuccess => 'Zielnik utworzony pomyślnie';
+
+  @override
+  String get herbariumUpdatedSuccess => 'Zielnik zaktualizowany pomyślnie';
+
+  @override
+  String get herbariumDeletedSuccess => 'Zielnik został usunięty';
+
+  @override
+  String get herbariumMadePublicSuccess => 'Zielnik jest teraz publiczny';
+
+  @override
+  String get herbariumMadePrivateSuccess => 'Zielnik jest teraz prywatny';
+
+  @override
+  String get editHerbariumTitle => 'Edytuj zielnik';
+
+  @override
   String get deleteHerbariumTitle => 'Usuń zielnik';
 
   @override

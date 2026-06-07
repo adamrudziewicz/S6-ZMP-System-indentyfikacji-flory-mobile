@@ -31,12 +31,18 @@ class PlantListBloc extends Bloc<PlantListEvent, PlantListState> {
   }
 
   Future<void> _onLoadPlants(LoadPlants event, Emitter<PlantListState> emit) async {
-    emit(PlantListLoading());
+    final currentState = state;
+    if (currentState is! PlantListLoaded) {
+      emit(PlantListLoading());
+    }
     try {
       final plants = await _getPlantsUseCase(event.herbariumId);
       emit(PlantListLoaded(plants));
     } catch (e) {
       emit(PlantListError(ErrorHandler.mapError(e)));
+      if (currentState is PlantListLoaded) {
+        emit(currentState);
+      }
     }
   }
 

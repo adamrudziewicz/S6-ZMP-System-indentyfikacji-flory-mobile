@@ -10,8 +10,8 @@ class ApiConstants {
     }
     return 'http://10.0.2.2:8080';
   }
-  static const int connectTimeout = 10000;
-  static const int receiveTimeout = 10000;
+  static const int connectTimeout = 60000;
+  static const int receiveTimeout = 60000;
 
   static const String loginPath = '/users/login';
   static const String refreshPath = '/users/refresh';

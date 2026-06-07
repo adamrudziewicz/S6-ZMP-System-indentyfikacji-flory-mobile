@@ -1,12 +1,16 @@
 import '../../domain/entities/friend.dart';
 import '../../domain/repositories/friend_repository.dart';
 import '../data_sources/friend_remote_data_source.dart';
+import '../data_sources/friend_local_data_source.dart';
 import '../models/friend_response.dart';
+import '../../../../core/network/network_info.dart';
 
 class FriendRepositoryImpl implements FriendRepository {
   final FriendRemoteDataSource _remoteDataSource;
+  final FriendLocalDataSource _localDataSource;
+  final NetworkInfo _networkInfo;
 
-  FriendRepositoryImpl(this._remoteDataSource);
+  FriendRepositoryImpl(this._remoteDataSource, this._localDataSource, this._networkInfo);
 
   Friend _mapDtoToEntity(FriendResponse dto) {
     return Friend(
@@ -21,8 +25,19 @@ class FriendRepositoryImpl implements FriendRepository {
 
   @override
   Future<List<Friend>> getFriends() async {
-    final list = await _remoteDataSource.getFriends();
-    return list.map(_mapDtoToEntity).toList();
+    if (await _networkInfo.isConnected) {
+      try {
+        final list = await _remoteDataSource.getFriends();
+        await _localDataSource.cacheFriends(list);
+        return list.map(_mapDtoToEntity).toList();
+      } catch (e) {
+        final cached = await _localDataSource.getCachedFriends();
+        return cached.map(_mapDtoToEntity).toList();
+      }
+    } else {
+      final cached = await _localDataSource.getCachedFriends();
+      return cached.map(_mapDtoToEntity).toList();
+    }
   }
 
   @override
@@ -39,14 +54,36 @@ class FriendRepositoryImpl implements FriendRepository {
 
   @override
   Future<List<Friend>> getIncomingFriendRequests() async {
-    final list = await _remoteDataSource.getIncomingFriendRequests();
-    return list.map(_mapDtoToEntity).toList();
+    if (await _networkInfo.isConnected) {
+      try {
+        final list = await _remoteDataSource.getIncomingFriendRequests();
+        await _localDataSource.cacheIncomingRequests(list);
+        return list.map(_mapDtoToEntity).toList();
+      } catch (e) {
+        final cached = await _localDataSource.getCachedIncomingRequests();
+        return cached.map(_mapDtoToEntity).toList();
+      }
+    } else {
+      final cached = await _localDataSource.getCachedIncomingRequests();
+      return cached.map(_mapDtoToEntity).toList();
+    }
   }
 
   @override
   Future<List<Friend>> getSentFriendRequests() async {
-    final list = await _remoteDataSource.getSentFriendRequests();
-    return list.map(_mapDtoToEntity).toList();
+    if (await _networkInfo.isConnected) {
+      try {
+        final list = await _remoteDataSource.getSentFriendRequests();
+        await _localDataSource.cacheSentRequests(list);
+        return list.map(_mapDtoToEntity).toList();
+      } catch (e) {
+        final cached = await _localDataSource.getCachedSentRequests();
+        return cached.map(_mapDtoToEntity).toList();
+      }
+    } else {
+      final cached = await _localDataSource.getCachedSentRequests();
+      return cached.map(_mapDtoToEntity).toList();
+    }
   }
 
   @override

@@ -47,7 +47,7 @@ class _CameraCapturePageState extends State<CameraCapturePage> with SingleTicker
         
         _controller = CameraController(
           backCamera, 
-          ResolutionPreset.max, 
+          ResolutionPreset.veryHigh, 
           enableAudio: false,
         );
         

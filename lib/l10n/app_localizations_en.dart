@@ -366,6 +366,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteHerbarium => 'Delete herbarium';
 
   @override
+  String get herbariumCreatedSuccess => 'Herbarium created successfully';
+
+  @override
+  String get herbariumUpdatedSuccess => 'Herbarium updated successfully';
+
+  @override
+  String get herbariumDeletedSuccess => 'Herbarium has been deleted';
+
+  @override
+  String get herbariumMadePublicSuccess => 'Herbarium is now public';
+
+  @override
+  String get herbariumMadePrivateSuccess => 'Herbarium is now private';
+
+  @override
+  String get editHerbariumTitle => 'Edit herbarium';
+
+  @override
   String get deleteHerbariumTitle => 'Delete herbarium';
 
   @override

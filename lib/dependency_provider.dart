@@ -43,6 +43,7 @@ import 'features/plants/domain/use_cases/update_plant_name_use_case.dart';
 import 'features/plants/domain/use_cases/update_photo_description_use_case.dart';
 import 'features/plants/domain/use_cases/delete_plant_use_case.dart';
 import 'features/notifications/data/data_sources/notification_remote_data_source.dart';
+import 'features/notifications/data/data_sources/notification_local_data_source.dart';
 import 'features/notifications/data/repositories/notification_repository_impl.dart';
 import 'features/notifications/domain/repositories/notification_repository.dart';
 import 'features/notifications/domain/use_cases/get_notifications_use_case.dart';
@@ -52,6 +53,7 @@ import 'features/notifications/domain/use_cases/mark_notification_as_read_use_ca
 import 'features/notifications/presentation/bloc/notification_bloc.dart';
 
 import 'features/friends/data/data_sources/friend_remote_data_source.dart';
+import 'features/friends/data/data_sources/friend_local_data_source.dart';
 import 'features/friends/data/repositories/friend_repository_impl.dart';
 import 'features/friends/domain/repositories/friend_repository.dart';
 import 'features/friends/domain/use_cases/get_friends_use_case.dart';
@@ -85,7 +87,9 @@ class _DependencyProviderState extends State<DependencyProvider> {
   late final PlantRemoteDataSourceImpl plantRemoteDataSource;
   late final PlantLocalDataSourceImpl plantLocalDataSource;
   late final NotificationRemoteDataSourceImpl notificationRemoteDataSource;
+  late final NotificationLocalDataSourceImpl notificationLocalDataSource;
   late final FriendRemoteDataSourceImpl friendRemoteDataSource;
+  late final FriendLocalDataSourceImpl friendLocalDataSource;
 
   @override
   void initState() {
@@ -103,7 +107,9 @@ class _DependencyProviderState extends State<DependencyProvider> {
     plantRemoteDataSource = PlantRemoteDataSourceImpl(apiService);
     plantLocalDataSource = PlantLocalDataSourceImpl();
     notificationRemoteDataSource = NotificationRemoteDataSourceImpl(apiService);
+    notificationLocalDataSource = NotificationLocalDataSourceImpl();
     friendRemoteDataSource = FriendRemoteDataSourceImpl(apiService);
+    friendLocalDataSource = FriendLocalDataSourceImpl();
   }
 
   @override
@@ -136,10 +142,18 @@ class _DependencyProviderState extends State<DependencyProvider> {
           create: (context) => PlantRepositoryImpl(plantRemoteDataSource, plantLocalDataSource, networkInfo),
         ),
         RepositoryProvider<NotificationRepository>(
-          create: (context) => NotificationRepositoryImpl(notificationRemoteDataSource),
+          create: (context) => NotificationRepositoryImpl(
+            notificationRemoteDataSource,
+            notificationLocalDataSource,
+            networkInfo,
+          ),
         ),
         RepositoryProvider<FriendRepository>(
-          create: (context) => FriendRepositoryImpl(friendRemoteDataSource),
+          create: (context) => FriendRepositoryImpl(
+            friendRemoteDataSource,
+            friendLocalDataSource,
+            networkInfo,
+          ),
         ),
       ],
       child: MultiBlocProvider(

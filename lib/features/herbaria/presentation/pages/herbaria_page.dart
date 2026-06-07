@@ -7,6 +7,7 @@ import '../bloc/herbaria_bloc.dart';
 import '../bloc/herbaria_event.dart';
 import '../bloc/herbaria_state.dart';
 import 'herbarium_details_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class HerbariaPage extends StatefulWidget {
   const HerbariaPage({super.key});
@@ -30,9 +31,28 @@ class _HerbariaPageState extends State<HerbariaPage> {
       body: BlocConsumer<HerbariaBloc, HerbariaState>(
         listener: (context, state) {
           if (state is HerbariumActionSuccess) {
+            String message;
+            switch (state.action) {
+              case HerbariumActionType.created:
+                message = l10n.herbariumCreatedSuccess;
+                break;
+              case HerbariumActionType.updated:
+                message = l10n.herbariumUpdatedSuccess;
+                break;
+              case HerbariumActionType.deleted:
+                message = l10n.herbariumDeletedSuccess;
+                break;
+              case HerbariumActionType.madePublic:
+                message = l10n.herbariumMadePublicSuccess;
+                break;
+              case HerbariumActionType.madePrivate:
+                message = l10n.herbariumMadePrivateSuccess;
+                break;
+            }
+
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(message),
                 backgroundColor: Colors.green.shade700,
                 behavior: SnackBarBehavior.floating,
               ),
@@ -213,10 +233,10 @@ class _HerbariaPageState extends State<HerbariaPage> {
                   child: Stack(
                     children: [
                       Positioned.fill(
-                        child: Image.network(
-                          'https://picsum.photos/seed/${herbarium.id}/400/400',
+                        child: CachedNetworkImage(
+                          imageUrl: 'https://picsum.photos/seed/${herbarium.id}/400/400',
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          errorWidget: (context, url, error) => Container(
                             color: Colors.green.shade50,
                             child: Center(
                               child: Icon(Icons.energy_savings_leaf_outlined, color: Colors.green.shade200, size: 60),
@@ -325,6 +345,14 @@ class _HerbariaPageState extends State<HerbariaPage> {
                 },
               ),
               ListTile(
+                leading: const Icon(Icons.edit_rounded, color: Color(0xFF2E7D32)),
+                title: Text(l10n.editHerbariumTitle, style: const TextStyle(fontWeight: FontWeight.w600)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showEditHerbariumDialog(context, herbarium, l10n);
+                },
+              ),
+              ListTile(
                 leading: const Icon(Icons.delete_outline_rounded, color: Colors.red),
                 title: Text(l10n.deleteHerbarium, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.red)),
                 onTap: () {
@@ -394,6 +422,7 @@ class _HerbariaPageState extends State<HerbariaPage> {
                       name: herbarium.name,
                       description: herbarium.description,
                       isPublic: !herbarium.isPublic,
+                      isVisibilityChange: true,
                     ),
                   );
               Navigator.pop(ctx);
@@ -402,6 +431,76 @@ class _HerbariaPageState extends State<HerbariaPage> {
           ),
         ],
       ),
+    );
+  }
+
+  void _showEditHerbariumDialog(BuildContext context, Herbarium herbarium, AppLocalizations l10n) {
+    final nameController = TextEditingController(text: herbarium.name);
+    final descController = TextEditingController(text: herbarium.description ?? '');
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          title: Text(l10n.editHerbariumTitle, style: const TextStyle(fontWeight: FontWeight.bold)),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: l10n.nameLabel,
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    labelText: l10n.descriptionOptionalLabel,
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2E7D32),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () {
+                final name = nameController.text.trim();
+                if (name.isNotEmpty) {
+                  this.context.read<HerbariaBloc>().add(
+                    UpdateHerbarium(
+                      id: herbarium.id,
+                      name: name,
+                      description: descController.text.trim(),
+                      isPublic: herbarium.isPublic,
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(l10n.saveButton),
+            ),
+          ],
+        );
+      },
     );
   }
 

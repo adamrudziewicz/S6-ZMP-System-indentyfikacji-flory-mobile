@@ -782,6 +782,42 @@ abstract class AppLocalizations {
   /// **'Delete herbarium'**
   String get deleteHerbarium;
 
+  /// No description provided for @herbariumCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Herbarium created successfully'**
+  String get herbariumCreatedSuccess;
+
+  /// No description provided for @herbariumUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Herbarium updated successfully'**
+  String get herbariumUpdatedSuccess;
+
+  /// No description provided for @herbariumDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Herbarium has been deleted'**
+  String get herbariumDeletedSuccess;
+
+  /// No description provided for @herbariumMadePublicSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Herbarium is now public'**
+  String get herbariumMadePublicSuccess;
+
+  /// No description provided for @herbariumMadePrivateSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Herbarium is now private'**
+  String get herbariumMadePrivateSuccess;
+
+  /// No description provided for @editHerbariumTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit herbarium'**
+  String get editHerbariumTitle;
+
   /// No description provided for @deleteHerbariumTitle.
   ///
   /// In en, this message translates to:

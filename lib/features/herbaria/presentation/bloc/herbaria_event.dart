@@ -29,16 +29,18 @@ class UpdateHerbarium extends HerbariaEvent {
   final String name;
   final String? description;
   final bool isPublic;
+  final bool isVisibilityChange;
 
   const UpdateHerbarium({
     required this.id,
     required this.name,
     this.description,
     required this.isPublic,
+    this.isVisibilityChange = false,
   });
 
   @override
-  List<Object?> get props => [id, name, description, isPublic];
+  List<Object?> get props => [id, name, description, isPublic, isVisibilityChange];
 }
 
 class DeleteHerbarium extends HerbariaEvent {

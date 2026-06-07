@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/api/api_constants.dart';
 
 class AuthenticatedImage extends StatefulWidget {
@@ -58,27 +59,24 @@ class _AuthenticatedImageState extends State<AuthenticatedImage> {
       headers['Authorization'] = 'Bearer $cleanToken';
     }
 
-    return Image.network(
-      imageUrl,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
       width: widget.width,
       height: widget.height,
       fit: widget.fit,
-      headers: headers,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
+      httpHeaders: headers,
+      progressIndicatorBuilder: (context, url, downloadProgress) {
         return SizedBox(
           width: widget.width,
           height: widget.height,
           child: Center(
             child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                  : null,
+              value: downloadProgress.progress,
             ),
           ),
         );
       },
-      errorBuilder: (context, error, stackTrace) {
+      errorWidget: (context, url, error) {
         return SizedBox(
           width: widget.width,
           height: widget.height,

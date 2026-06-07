@@ -118,6 +118,12 @@
     "addDescriptionLabel": "Add description...",
     
     "deleteHerbarium": "Delete herbarium",
+    "herbariumCreatedSuccess": "Herbarium created successfully",
+    "herbariumUpdatedSuccess": "Herbarium updated successfully",
+    "herbariumDeletedSuccess": "Herbarium has been deleted",
+    "herbariumMadePublicSuccess": "Herbarium is now public",
+    "herbariumMadePrivateSuccess": "Herbarium is now private",
+    "editHerbariumTitle": "Edit herbarium",
     "deleteHerbariumTitle": "Delete herbarium",
     "deleteHerbariumContent": "Are you sure you want to delete the herbarium \"{name}\"? This action cannot be undone.",
     "@deleteHerbariumContent": {

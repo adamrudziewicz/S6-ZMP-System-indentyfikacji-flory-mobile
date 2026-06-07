@@ -30,36 +30,41 @@ class HerbariaBloc extends Bloc<HerbariaEvent, HerbariaState> {
   }
 
   Future<void> _onLoadMyHerbaria(LoadMyHerbaria event, Emitter<HerbariaState> emit) async {
-    emit(HerbariaLoading());
+    final currentState = state;
+    if (currentState is! HerbariaLoaded) {
+      emit(HerbariaLoading());
+    }
     try {
       final herbaria = await _getMyHerbaria();
       emit(HerbariaLoaded(herbaria));
     } catch (e) {
       emit(HerbariaError(ErrorHandler.mapError(e)));
+      if (currentState is HerbariaLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onCreateHerbarium(CreateHerbarium event, Emitter<HerbariaState> emit) async {
     final currentState = state;
-    emit(HerbariaLoading());
     try {
       await _createHerbarium(
         name: event.name,
         description: event.description,
         isPublic: event.isPublic,
       );
-      emit(const HerbariumActionSuccess('Herbarium utworzone pomyślnie'));
-      if (currentState is HerbariaLoaded) {
-        add(LoadMyHerbaria());
-      }
+      emit(const HerbariumActionSuccess(HerbariumActionType.created));
+      add(LoadMyHerbaria());
     } catch (e) {
       emit(HerbariaError(ErrorHandler.mapError(e)));
+      if (currentState is HerbariaLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onUpdateHerbarium(UpdateHerbarium event, Emitter<HerbariaState> emit) async {
     final currentState = state;
-    emit(HerbariaLoading());
     try {
       await _updateHerbarium(
         id: event.id,
@@ -67,26 +72,35 @@ class HerbariaBloc extends Bloc<HerbariaEvent, HerbariaState> {
         description: event.description,
         isPublic: event.isPublic,
       );
-      emit(HerbariumActionSuccess(event.isPublic ? 'Herbarium jest teraz publiczne' : 'Herbarium jest teraz prywatne'));
-      if (currentState is HerbariaLoaded) {
-        add(LoadMyHerbaria());
+      
+      HerbariumActionType actionType;
+      if (event.isVisibilityChange) {
+        actionType = event.isPublic ? HerbariumActionType.madePublic : HerbariumActionType.madePrivate;
+      } else {
+        actionType = HerbariumActionType.updated;
       }
+      
+      emit(HerbariumActionSuccess(actionType));
+      add(LoadMyHerbaria());
     } catch (e) {
       emit(HerbariaError(ErrorHandler.mapError(e)));
+      if (currentState is HerbariaLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onDeleteHerbarium(DeleteHerbarium event, Emitter<HerbariaState> emit) async {
     final currentState = state;
-    emit(HerbariaLoading());
     try {
       await _deleteHerbarium(event.id);
-      emit(const HerbariumActionSuccess('Zielnik został usunięty'));
-      if (currentState is HerbariaLoaded) {
-        add(LoadMyHerbaria());
-      }
+      emit(const HerbariumActionSuccess(HerbariumActionType.deleted));
+      add(LoadMyHerbaria());
     } catch (e) {
       emit(HerbariaError(ErrorHandler.mapError(e)));
+      if (currentState is HerbariaLoaded) {
+        emit(currentState);
+      }
     }
   }
 }

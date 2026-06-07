@@ -115,6 +115,12 @@
     "addDescriptionLabel": "Dodaj opis...",
     
     "deleteHerbarium": "Usuń zielnik",
+    "herbariumCreatedSuccess": "Zielnik utworzony pomyślnie",
+    "herbariumUpdatedSuccess": "Zielnik zaktualizowany pomyślnie",
+    "herbariumDeletedSuccess": "Zielnik został usunięty",
+    "herbariumMadePublicSuccess": "Zielnik jest teraz publiczny",
+    "herbariumMadePrivateSuccess": "Zielnik jest teraz prywatny",
+    "editHerbariumTitle": "Edytuj zielnik",
     "deleteHerbariumTitle": "Usuń zielnik",
     "deleteHerbariumContent": "Czy na pewno chcesz usunąć zielnik \"{name}\"? Tej operacji nie można cofnąć.",
     "@deleteHerbariumContent": {

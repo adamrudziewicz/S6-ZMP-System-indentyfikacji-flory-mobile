@@ -31,11 +31,19 @@ class HerbariaError extends HerbariaState {
   List<Object?> get props => [exception];
 }
 
-class HerbariumActionSuccess extends HerbariaState {
-  final String message;
+enum HerbariumActionType {
+  created,
+  updated,
+  deleted,
+  madePublic,
+  madePrivate,
+}
 
-  const HerbariumActionSuccess(this.message);
+class HerbariumActionSuccess extends HerbariaState {
+  final HerbariumActionType action;
+
+  const HerbariumActionSuccess(this.action);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [action];
 }

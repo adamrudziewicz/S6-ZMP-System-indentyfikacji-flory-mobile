@@ -38,7 +38,10 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   }
 
   Future<void> _onLoadFriends(LoadFriends event, Emitter<FriendsState> emit) async {
-    emit(FriendsLoading());
+    final currentState = state;
+    if (currentState is! FriendsLoaded) {
+      emit(FriendsLoading());
+    }
     try {
       final friendsList = await _getFriends();
       final incomingList = await _getIncomingRequests();
@@ -51,39 +54,51 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
       ));
     } catch (e) {
       emit(FriendsError(ErrorHandler.mapError(e)));
+      if (currentState is FriendsLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onSendFriendRequest(SendFriendRequest event, Emitter<FriendsState> emit) async {
-    emit(FriendsLoading());
+    final currentState = state;
     try {
       await _sendFriendRequest(event.username);
       emit(const FriendActionSuccess('Zaproszenie wysłane pomyślnie'));
       add(LoadFriends());
     } catch (e) {
       emit(FriendsError(ErrorHandler.mapError(e)));
+      if (currentState is FriendsLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onAcceptFriendRequest(AcceptFriendRequest event, Emitter<FriendsState> emit) async {
-    emit(FriendsLoading());
+    final currentState = state;
     try {
       await _acceptFriendRequest(event.friendshipId);
       emit(const FriendActionSuccess('Zaproszenie zostało zaakceptowane'));
       add(LoadFriends());
     } catch (e) {
       emit(FriendsError(ErrorHandler.mapError(e)));
+      if (currentState is FriendsLoaded) {
+        emit(currentState);
+      }
     }
   }
 
   Future<void> _onRemoveFriendship(RemoveFriendship event, Emitter<FriendsState> emit) async {
-    emit(FriendsLoading());
+    final currentState = state;
     try {
       await _deleteFriendship(event.friendshipId);
       emit(const FriendActionSuccess('Znajomość została usunięta'));
       add(LoadFriends());
     } catch (e) {
       emit(FriendsError(ErrorHandler.mapError(e)));
+      if (currentState is FriendsLoaded) {
+        emit(currentState);
+      }
     }
   }
 }
